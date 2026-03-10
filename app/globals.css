@@ -1,12 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@500;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
-  --bg: #fff8ef;
-  --ink: #1f1d1a;
-  --muted: #69635c;
-  --card: #fffdf8;
-  --line: #ded3c2;
-  --accent: #ff6b3d;
+  --bg: #eef3e9;
+  --ink: #25312e;
+  --muted: #5a6a66;
+  --card: #f9fcf2;
+  --line: #c8d8c1;
+  --accent: #e36d57;
+  --accent-2: #7bb8a2;
 }
 
 * {
@@ -21,7 +23,10 @@ body {
 }
 
 body {
-  background: radial-gradient(circle at 12% 0%, #ffe6d4 0%, var(--bg) 42%);
+  background:
+    radial-gradient(circle at 15% 12%, #dbe9da 0%, rgba(219, 233, 218, 0) 55%),
+    radial-gradient(circle at 82% 3%, #f7d7c9 0%, rgba(247, 215, 201, 0) 44%),
+    var(--bg);
   color: var(--ink);
-  font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+  font-family: "Nunito", "Segoe UI", sans-serif;
 }

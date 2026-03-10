@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #fff8ef;
+  --ink: #1f1d1a;
+  --muted: #69635c;
+  --card: #fffdf8;
+  --line: #ded3c2;
+  --accent: #ff6b3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(circle at 12% 0%, #ffe6d4 0%, var(--bg) 42%);
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+}

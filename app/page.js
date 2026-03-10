@@ -22,10 +22,10 @@ export default function HomePage() {
             optionally protect access with a 4-digit PIN.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <button className="rounded-2xl bg-[var(--accent)] px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5">
+            <button className="cursor-pointer rounded-2xl bg-[var(--accent)] px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5">
               Start upload
             </button>
-            <button className="rounded-2xl border border-[var(--line)] bg-white px-5 py-3 text-sm font-bold text-[var(--ink)]">
+            <button className="cursor-pointer rounded-2xl border border-[var(--line)] bg-white px-5 py-3 text-sm font-bold text-[var(--ink)]">
               Open link
             </button>
           </div>

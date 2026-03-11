@@ -10,7 +10,7 @@ export function SelectedFilesPanel({
   onRemoveFile,
 }: SelectedFilesPanelProps) {
   return (
-    <div className="rounded-[1.6rem] border-2 border-(--line) bg-(--soft) p-5 text-sm text-(--muted)">
+    <div className="rounded-[1.6rem] border-2 border-(--line) bg-white p-5 text-sm text-(--muted)">
       <p className="font-bold text-(--ink)">Selected files</p>
       {!files.length ? (
         <p className="mt-2">No files selected yet.</p>
@@ -21,7 +21,7 @@ export function SelectedFilesPanel({
 
             return (
               <li
-                className="flex items-center justify-between rounded-xl border border-(--line) bg-white px-3 py-2"
+                className="flex items-center justify-between rounded-xl border border-(--line) bg-(--drag-overlay) px-3 py-2"
                 key={id}
               >
                 <div className="flex min-w-0 items-center gap-2">

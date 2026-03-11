@@ -5,7 +5,7 @@ export function HeroSection() {
         No USB needed
       </p>
       <h1
-        className="text-4xl leading-tight font-bold md:text-6xl"
+        className="text-4xl leading-16 font-bold md:text-6xl"
         style={{ fontFamily: 'Fraunces, serif' }}
       >
         Send your file,

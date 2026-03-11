@@ -78,7 +78,10 @@ export function FileTransferAside() {
   };
 
   return (
-    <aside className="grid gap-4 grid-rows:1fr_2fr" id="file-transfer">
+    <aside
+      className="grid gap-4 grid-rows-[1fr_2fr] md:min-h-136"
+      id="file-transfer"
+    >
       <UploadFilesPanel
         fileInputRef={fileInputRef}
         isDragging={isDragging}

@@ -10,7 +10,7 @@ export function SelectedFilesPanel({
   onRemoveFile,
 }: SelectedFilesPanelProps) {
   return (
-    <div className="rounded-[1.6rem] border border-(--line) bg-[#edf5ec] p-5 text-sm text-(--muted)">
+    <div className="rounded-[1.6rem] border-2 border-(--line) bg-(--soft) p-5 text-sm text-(--muted)">
       <p className="font-bold text-(--ink)">Selected files</p>
       {!files.length ? (
         <p className="mt-2">No files selected yet.</p>
@@ -53,7 +53,7 @@ export function SelectedFilesPanel({
                 </div>
                 <button
                   aria-label={`Remove ${file.name}`}
-                  className="cursor-pointer rounded-md p-1 text-(--muted) hover:bg-[#f6dfd8] hover:text-(--accent)"
+                  className="cursor-pointer rounded-md p-1 text-(--muted) hover:bg-(--highlight) hover:text-(--accent)"
                   onClick={() => onRemoveFile(id)}
                   type="button"
                 >

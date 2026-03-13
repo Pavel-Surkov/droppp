@@ -5,6 +5,7 @@ type UploadFilesPanelProps = {
   isDragging: boolean;
   limitError: string;
   maxFileSizeLabel: string;
+  maxFilesCount: number;
   onFileInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onOpenFilePicker: () => void;
   onDropZoneDragOver: (event: DragEvent<HTMLDivElement>) => void;
@@ -17,6 +18,7 @@ export function UploadFilesPanel({
   isDragging,
   limitError,
   maxFileSizeLabel,
+  maxFilesCount,
   onFileInputChange,
   onOpenFilePicker,
   onDropZoneDragOver,
@@ -55,6 +57,9 @@ export function UploadFilesPanel({
       </p>
       <p className="mt-2 text-xs text-(--muted)">
         Max size: {maxFileSizeLabel} per file.
+      </p>
+      <p className="mt-1 text-xs text-(--muted)">
+        Max files: {maxFilesCount}.
       </p>
       {limitError ? (
         <p className="mt-2 text-xs font-bold text-(--accent)">{limitError}</p>

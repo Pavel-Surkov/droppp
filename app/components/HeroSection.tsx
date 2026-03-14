@@ -6,7 +6,7 @@ type HeroSectionProps = {
 
 export function HeroSection({ messages }: HeroSectionProps) {
   return (
-    <article className="rounded-4xl border-2 border-(--line) bg-(--card) p-6 shadow-[0_18px_48px_rgba(0,0,0,0.2)] md:p-9">
+    <article className="rounded-4xl border-2 border-(--line) bg-(--card) p-6 md:p-9 md:shadow-[0_18px_48px_rgba(0,0,0,0.2)]">
       <p className="mb-5 inline-flex rounded-full bg-(--soft) px-3 py-1 text-xs font-bold tracking-wide text-(--muted)">
         {messages.badge}
       </p>

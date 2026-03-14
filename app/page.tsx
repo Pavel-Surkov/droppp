@@ -1,5 +1,6 @@
 import { FileTransferAside } from "@/app/components/FileTransferAside"
 import { HeroSection } from "@/app/components/HeroSection"
+import { LanguageSwitcher } from "@/app/components/LanguageSwitcher"
 import { getLocale, getMessages } from "@/i18n/messages"
 
 type HomePageProps = {
@@ -12,7 +13,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const messages = getMessages(locale)
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-6xl items-center px-5 pt-10 pb-16 md:px-10 md:py-10">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-6xl items-center px-5 pt-20 pb-16 md:px-10 md:py-10">
+      <div className="absolute top-4 right-5 md:top-6 md:right-10">
+        <LanguageSwitcher locale={locale} />
+      </div>
       <section className="grid w-full gap-6 md:grid-cols-[1.1fr_0.9fr]">
         <HeroSection messages={messages.hero} />
         <FileTransferAside messages={messages} />

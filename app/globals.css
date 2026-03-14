@@ -2,16 +2,76 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #f6ca75;
-  --ink: #624d74;
-  --muted: #7c658f;
-  --card: #fff5df;
-  --line: #c7b1d6;
-  --accent: #e28466;
-  --accent-2: #f6ca75;
-  --soft: #fbe2bf;
-  --highlight: #f3c3b2;
-  --drag-overlay: #c7b1d620;
+  --color-vibrant-coral-50: #fde8e8;
+  --color-vibrant-coral-100: #fbd0d0;
+  --color-vibrant-coral-200: #f6a2a2;
+  --color-vibrant-coral-300: #f27373;
+  --color-vibrant-coral-400: #ee4444;
+  --color-vibrant-coral-500: #e91616;
+  --color-vibrant-coral-600: #bb1111;
+  --color-vibrant-coral-700: #8c0d0d;
+  --color-vibrant-coral-800: #5d0909;
+  --color-vibrant-coral-900: #2f0404;
+  --color-vibrant-coral-950: #210303;
+
+  --color-stormy-teal-50: #e8fcfc;
+  --color-stormy-teal-100: #d2f8f9;
+  --color-stormy-teal-200: #a5f2f3;
+  --color-stormy-teal-300: #78ebed;
+  --color-stormy-teal-400: #4ae5e8;
+  --color-stormy-teal-500: #1ddee2;
+  --color-stormy-teal-600: #17b2b5;
+  --color-stormy-teal-700: #128587;
+  --color-stormy-teal-800: #0c595a;
+  --color-stormy-teal-900: #062c2d;
+  --color-stormy-teal-950: #041f20;
+
+  --color-platinum-50: #f0f3f5;
+  --color-platinum-100: #e0e7eb;
+  --color-platinum-200: #c2cfd6;
+  --color-platinum-300: #a3b7c2;
+  --color-platinum-400: #859ead;
+  --color-platinum-500: #668699;
+  --color-platinum-600: #526b7a;
+  --color-platinum-700: #3d515c;
+  --color-platinum-800: #29363d;
+  --color-platinum-900: #141b1f;
+  --color-platinum-950: #0e1315;
+
+  --color-shadow-grey-50: #f1f1f4;
+  --color-shadow-grey-100: #e2e4e9;
+  --color-shadow-grey-200: #c6c8d2;
+  --color-shadow-grey-300: #a9adbc;
+  --color-shadow-grey-400: #8d91a5;
+  --color-shadow-grey-500: #70768f;
+  --color-shadow-grey-600: #5a5e72;
+  --color-shadow-grey-700: #434756;
+  --color-shadow-grey-800: #2d2f39;
+  --color-shadow-grey-900: #16181d;
+  --color-shadow-grey-950: #101014;
+
+  --color-light-bronze-50: #f9f1eb;
+  --color-light-bronze-100: #f3e3d8;
+  --color-light-bronze-200: #e7c7b1;
+  --color-light-bronze-300: #dbac8a;
+  --color-light-bronze-400: #cf9063;
+  --color-light-bronze-500: #c3743c;
+  --color-light-bronze-600: #9c5d30;
+  --color-light-bronze-700: #754624;
+  --color-light-bronze-800: #4e2e18;
+  --color-light-bronze-900: #27170c;
+  --color-light-bronze-950: #1b1008;
+
+  --bg: var(--color-platinum-50);
+  --ink: var(--color-shadow-grey-800);
+  --muted: var(--color-shadow-grey-500);
+  --card: var(--color-shadow-grey-50);
+  --line: var(--color-platinum-300);
+  --accent: var(--color-vibrant-coral-500);
+  --accent-2: var(--color-stormy-teal-600);
+  --soft: var(--color-light-bronze-100);
+  --highlight: var(--color-vibrant-coral-100);
+  --drag-overlay: #a3b7c23a;
 }
 
 * {
@@ -29,18 +89,19 @@ body {
   background:
     radial-gradient(
       circle at 12% 10%,
-      rgba(246, 202, 117, 0.54) 0%,
-      rgba(246, 202, 117, 0) 50%
+      rgba(195, 116, 60, 0.24) 0%,
+      rgba(195, 116, 60, 0) 50%
     ),
     radial-gradient(
       circle at 88% 8%,
-      rgba(226, 132, 102, 0.45) 0%,
-      rgba(226, 132, 102, 0) 48%
+      rgba(29, 222, 226, 0.28) 0%,
+      rgba(29, 222, 226, 0) 48%
     ),
     linear-gradient(
       140deg,
-      rgba(226, 132, 102, 0.56) 0%,
-      rgba(246, 202, 117, 0.32) 100%
+      rgba(240, 243, 245, 0.96) 0%,
+      rgba(253, 232, 232, 0.74) 52%,
+      rgba(232, 252, 252, 0.72) 100%
     );
   color: var(--ink);
   font-family: 'Nunito', 'Segoe UI', sans-serif;

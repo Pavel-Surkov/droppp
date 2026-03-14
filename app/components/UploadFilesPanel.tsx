@@ -28,7 +28,7 @@ export function UploadFilesPanel({
   return (
     <div
       className={`rounded-[1.6rem] border-2 border-dashed border-(--line) p-5 transition-[background-color] duration-200 ${
-        isDragging ? 'bg-(--line)' : 'bg-white'
+        isDragging ? 'bg-(--color-stormy-teal-100)' : 'bg-white'
       }`}
       onDragOver={onDropZoneDragOver}
       onDragLeave={onDropZoneDragLeave}
@@ -53,14 +53,11 @@ export function UploadFilesPanel({
         >
           choose files
         </button>
-        .
       </p>
       <p className="mt-2 text-xs text-(--muted)">
-        Max size: {maxFileSizeLabel} per file.
+        Max size: {maxFileSizeLabel} per file
       </p>
-      <p className="mt-1 text-xs text-(--muted)">
-        Max files: {maxFilesCount}.
-      </p>
+      <p className="mt-1 text-xs text-(--muted)">Max files: {maxFilesCount}</p>
       {limitError ? (
         <p className="mt-2 text-xs font-bold text-(--accent)">{limitError}</p>
       ) : null}

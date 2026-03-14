@@ -7,28 +7,16 @@ import {
   MAX_FILES_COUNT,
   MAX_FILE_SIZE_BYTES,
 } from '@/constants/upload';
+import {
+  cleanupExpiredShares,
+  ensureStorageDirs,
+  FILES_ROOT,
+  SHARES_ROOT,
+  type ShareMeta,
+  type StoredFileMeta,
+} from '@/lib/storage';
 
 export const runtime = 'nodejs';
-
-type StoredFileMeta = {
-  originalName: string;
-  storedName: string;
-  mimeType: string;
-  size: number;
-};
-
-type ShareMeta = {
-  id: string;
-  code: string;
-  createdAt: string;
-  expiresAt: string;
-  pinHash: string;
-  files: StoredFileMeta[];
-};
-
-const STORAGE_ROOT = path.join(process.cwd(), 'storage');
-const FILES_ROOT = path.join(STORAGE_ROOT, 'uploads');
-const SHARES_ROOT = path.join(STORAGE_ROOT, 'shares');
 
 function sanitizeFileName(name: string): string {
   return name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -90,8 +78,8 @@ export async function POST(request: Request) {
       );
     }
 
-    await fs.mkdir(FILES_ROOT, { recursive: true });
-    await fs.mkdir(SHARES_ROOT, { recursive: true });
+    await ensureStorageDirs();
+    await cleanupExpiredShares();
 
     const id = randomBytes(12).toString('hex');
     const code = await createUniqueCode();

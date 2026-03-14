@@ -1,0 +1,63 @@
+import { promises as fs } from 'fs';
+import path from 'path';
+
+export type StoredFileMeta = {
+  originalName: string;
+  storedName: string;
+  mimeType: string;
+  size: number;
+};
+
+export type ShareMeta = {
+  id: string;
+  code: string;
+  createdAt: string;
+  expiresAt: string;
+  pinHash: string;
+  files: StoredFileMeta[];
+};
+
+export const STORAGE_ROOT = path.join(process.cwd(), 'storage');
+export const FILES_ROOT = path.join(STORAGE_ROOT, 'uploads');
+export const SHARES_ROOT = path.join(STORAGE_ROOT, 'shares');
+
+export async function ensureStorageDirs() {
+  await fs.mkdir(FILES_ROOT, { recursive: true });
+  await fs.mkdir(SHARES_ROOT, { recursive: true });
+}
+
+function isExpired(isoDate: string, now: Date): boolean {
+  const expiresAtMs = new Date(isoDate).getTime();
+  if (Number.isNaN(expiresAtMs)) return true;
+  return expiresAtMs <= now.getTime();
+}
+
+export async function cleanupExpiredShares(now = new Date()) {
+  await ensureStorageDirs();
+
+  const files = await fs.readdir(SHARES_ROOT);
+  let removed = 0;
+  let failed = 0;
+
+  for (const fileName of files) {
+    if (!fileName.endsWith('.json')) continue;
+
+    const metaPath = path.join(SHARES_ROOT, fileName);
+    try {
+      const raw = await fs.readFile(metaPath, 'utf8');
+      const meta = JSON.parse(raw) as Partial<ShareMeta>;
+
+      if (!meta.expiresAt || !isExpired(meta.expiresAt, now)) continue;
+
+      if (typeof meta.id === 'string' && meta.id.length > 0) {
+        await fs.rm(path.join(FILES_ROOT, meta.id), { recursive: true, force: true });
+      }
+      await fs.rm(metaPath, { force: true });
+      removed += 1;
+    } catch {
+      failed += 1;
+    }
+  }
+
+  return { removed, failed };
+}

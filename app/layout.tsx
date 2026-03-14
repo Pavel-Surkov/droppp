@@ -4,7 +4,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Dropp",
-  description: "Fast file sharing by short link",
+  description: "Быстрый обмен файлами по короткой ссылке",
 }
 
 type RootLayoutProps = {

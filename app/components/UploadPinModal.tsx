@@ -1,6 +1,8 @@
 import { PinInput } from '@/app/components/PinInput';
+import type { AppMessages } from '@/i18n/messages';
 
 type UploadPinModalProps = {
+  messages: AppMessages['pinModal'];
   isOpen: boolean;
   isSubmitting: boolean;
   pinValue: string;
@@ -10,6 +12,7 @@ type UploadPinModalProps = {
 };
 
 export function UploadPinModal({
+  messages,
   isOpen,
   isSubmitting,
   pinValue,
@@ -32,13 +35,13 @@ export function UploadPinModal({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-extrabold text-(--ink)">Enter a PIN</h2>
+            <h2 className="text-xl font-extrabold text-(--ink)">{messages.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-(--muted)">
-              The recipient will need to enter this PIN to access the files.
+              {messages.description}
             </p>
           </div>
           <button
-            aria-label="Close PIN modal"
+            aria-label={messages.closeAria}
             className="cursor-pointer rounded-md p-1 text-(--muted) hover:bg-(--highlight) hover:text-(--accent)"
             onClick={onClose}
             type="button"
@@ -61,14 +64,14 @@ export function UploadPinModal({
 
         <PinInput onChange={onPinChange} value={pinValue} />
         <p className="mt-3 text-center text-xs text-(--muted)">
-          Save this PIN somewhere safe. You will need it to share file access.
+          {messages.reminder}
         </p>
         <button
           className="mt-5 w-full cursor-pointer rounded-xl bg-(--accent) px-4 py-2.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!isPinComplete || isSubmitting}
           type="submit"
         >
-          {isSubmitting ? 'Uploading...' : 'Continue'}
+          {isSubmitting ? messages.uploadingButton : messages.continueButton}
         </button>
       </form>
     </div>

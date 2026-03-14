@@ -3,13 +3,19 @@
 import { useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import { MAX_FILE_SIZE_BYTES, MAX_FILES_COUNT } from '@/constants/upload';
+import type { AppMessages } from '@/i18n/messages';
 import { buildFileId, formatBytes } from '@/utils/files';
+import { formatMessage } from '@/utils/format-message';
 import { SelectedFilesPanel } from '@/app/components/SelectedFilesPanel';
 import { UploadFilesPanel } from '@/app/components/UploadFilesPanel';
 import { UploadPinModal } from '@/app/components/UploadPinModal';
 import { UploadSuccessModal } from '@/app/components/UploadSuccessModal';
 
-export function FileTransferAside() {
+type FileTransferAsideProps = {
+  messages: AppMessages;
+};
+
+export function FileTransferAside({ messages }: FileTransferAsideProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -41,12 +47,18 @@ export function FileTransferAside() {
     const errors: string[] = [];
     if (oversized.length > 0) {
       errors.push(
-        `${oversized.length} file(s) skipped: max size is ${formatBytes(MAX_FILE_SIZE_BYTES)} per file.`
+        formatMessage(messages.errors.tooLarge, {
+          count: oversized.length,
+          size: formatBytes(MAX_FILE_SIZE_BYTES),
+        })
       );
     }
     if (exceededCount > 0) {
       errors.push(
-        `${exceededCount} file(s) skipped: max ${MAX_FILES_COUNT} files allowed.`
+        formatMessage(messages.errors.tooMany, {
+          count: exceededCount,
+          max: MAX_FILES_COUNT,
+        })
       );
     }
     setLimitError(errors.join(' '));
@@ -130,7 +142,7 @@ export function FileTransferAside() {
         shortLink?: string;
       };
       if (!response.ok) {
-        throw new Error(payload.message ?? 'Upload failed.');
+        throw new Error(payload.message ?? messages.errors.uploadFailed);
       }
 
       const shortLink = payload.shortLink ?? (payload.code ? `/s/${payload.code}` : '');
@@ -144,7 +156,8 @@ export function FileTransferAside() {
       setShareLink(fullShareLink);
       setIsSuccessModalOpen(true);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Upload failed.';
+      const message =
+        error instanceof Error ? error.message : messages.errors.uploadFailed;
       setLimitError(message);
     } finally {
       setIsUploading(false);
@@ -163,6 +176,7 @@ export function FileTransferAside() {
         id="file-transfer"
       >
         <UploadFilesPanel
+          messages={messages.uploadPanel}
           fileInputRef={fileInputRef}
           isDragging={isDragging}
           limitError={limitError}
@@ -175,6 +189,7 @@ export function FileTransferAside() {
           onOpenFilePicker={openFilePicker}
         />
         <SelectedFilesPanel
+          messages={messages.selectedPanel}
           files={files}
           onRemoveFile={removeFile}
           onUploadFiles={onUploadFiles}
@@ -182,6 +197,7 @@ export function FileTransferAside() {
       </aside>
 
       <UploadPinModal
+        messages={messages.pinModal}
         isOpen={isPinModalOpen}
         isSubmitting={isUploading}
         onContinue={onContinueUpload}
@@ -190,6 +206,7 @@ export function FileTransferAside() {
         pinValue={pinValue}
       />
       <UploadSuccessModal
+        messages={messages.successModal}
         isOpen={isSuccessModalOpen}
         onClose={closeSuccessModal}
         shareLink={shareLink}

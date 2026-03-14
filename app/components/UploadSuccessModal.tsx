@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import type { AppMessages } from '@/i18n/messages';
 
 type UploadSuccessModalProps = {
+  messages: AppMessages['successModal'];
   isOpen: boolean;
   shareLink: string;
   onClose: () => void;
 };
 
 export function UploadSuccessModal({
+  messages,
   isOpen,
   shareLink,
   onClose,
@@ -18,27 +21,27 @@ export function UploadSuccessModal({
   const onCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareLink);
-      setInfoMessage('Link copied.');
+      setInfoMessage(messages.copied);
     } catch {
-      setInfoMessage('Could not copy automatically. Please copy manually.');
+      setInfoMessage(messages.copyFailed);
     }
   };
 
   const onShareLink = async () => {
     if (!('share' in navigator)) {
-      setInfoMessage('Share is not supported on this device.');
+      setInfoMessage(messages.shareNotSupported);
       return;
     }
 
     try {
       await navigator.share({
-        title: 'File access link',
-        text: 'Use this link to access the uploaded files.',
+        title: messages.shareTitle,
+        text: messages.shareText,
         url: shareLink,
       });
-      setInfoMessage('Share dialog opened.');
+      setInfoMessage(messages.shareOpened);
     } catch {
-      setInfoMessage('Share action was cancelled.');
+      setInfoMessage(messages.shareCancelled);
     }
   };
 
@@ -48,15 +51,14 @@ export function UploadSuccessModal({
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-extrabold text-(--ink)">
-              Upload complete
+              {messages.title}
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-(--muted)">
-              Your files were uploaded successfully. Share this link with the
-              recipient to access the files.
+              {messages.description}
             </p>
           </div>
           <button
-            aria-label="Close upload success modal"
+            aria-label={messages.closeAria}
             className="cursor-pointer rounded-md p-1 text-(--muted) hover:bg-(--highlight) hover:text-(--accent)"
             onClick={onClose}
             type="button"
@@ -87,14 +89,14 @@ export function UploadSuccessModal({
             onClick={onCopyLink}
             type="button"
           >
-            Copy link
+            {messages.copyButton}
           </button>
           <button
             className="cursor-pointer rounded-xl bg-(--accent) px-4 py-2.5 text-sm font-bold text-white"
             onClick={onShareLink}
             type="button"
           >
-            Share
+            {messages.shareButton}
           </button>
         </div>
 

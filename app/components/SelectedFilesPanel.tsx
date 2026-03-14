@@ -1,21 +1,24 @@
 import { buildFileId, formatBytes } from '@/utils/files';
+import type { AppMessages } from '@/i18n/messages';
 
 type SelectedFilesPanelProps = {
+  messages: AppMessages['selectedPanel'];
   files: File[];
   onRemoveFile: (id: string) => void;
   onUploadFiles: () => void;
 };
 
 export function SelectedFilesPanel({
+  messages,
   files,
   onRemoveFile,
   onUploadFiles,
 }: SelectedFilesPanelProps) {
   return (
     <div className="flex h-full min-h-0 flex-col rounded-[1.6rem] border-2 border-(--line) bg-white p-5 text-sm text-(--muted)">
-      <p className="font-bold text-(--ink)">Selected files</p>
+      <p className="font-bold text-(--ink)">{messages.title}</p>
       {!files.length ? (
-        <p className="mt-2 mb-auto">No files selected yet.</p>
+        <p className="mt-2 mb-auto">{messages.empty}</p>
       ) : (
         <ul className="mt-3 mb-auto max-h-56 space-y-2 overflow-y-auto pr-1">
           {files.map((file) => {
@@ -54,7 +57,7 @@ export function SelectedFilesPanel({
                   </div>
                 </div>
                 <button
-                  aria-label={`Remove ${file.name}`}
+                  aria-label={`${messages.removeFileAria}: ${file.name}`}
                   className="cursor-pointer rounded-md p-1 text-(--muted) hover:bg-(--highlight) hover:text-(--accent)"
                   onClick={() => onRemoveFile(id)}
                   type="button"
@@ -84,7 +87,7 @@ export function SelectedFilesPanel({
           onClick={onUploadFiles}
           type="button"
         >
-          Upload
+          {messages.uploadButton}
         </button>
       ) : null}
     </div>

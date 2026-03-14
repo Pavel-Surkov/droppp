@@ -1,6 +1,8 @@
 import type { ChangeEvent, DragEvent, RefObject } from 'react';
+import type { AppMessages } from '@/i18n/messages';
 
 type UploadFilesPanelProps = {
+  messages: AppMessages['uploadPanel'];
   fileInputRef: RefObject<HTMLInputElement | null>;
   isDragging: boolean;
   limitError: string;
@@ -14,6 +16,7 @@ type UploadFilesPanelProps = {
 };
 
 export function UploadFilesPanel({
+  messages,
   fileInputRef,
   isDragging,
   limitError,
@@ -42,22 +45,25 @@ export function UploadFilesPanel({
         type="file"
       />
       <p className="text-xs font-bold uppercase tracking-[0.12em] text-(--muted)">
-        Upload files
+        {messages.title}
       </p>
       <p className="mt-2 text-sm text-(--muted)">
-        Drag and drop files here, or{' '}
+        {messages.dropHintPrefix}{' '}
         <button
           className="cursor-pointer font-bold text-(--accent) underline"
           onClick={onOpenFilePicker}
           type="button"
         >
-          choose files
+          {messages.chooseFiles}
         </button>
+        {messages.dropHintSuffix}
       </p>
       <p className="mt-2 text-xs text-(--muted)">
-        Max size: {maxFileSizeLabel} per file
+        {messages.maxSizeLabel}: {maxFileSizeLabel}
       </p>
-      <p className="mt-1 text-xs text-(--muted)">Max files: {maxFilesCount}</p>
+      <p className="mt-1 text-xs text-(--muted)">
+        {messages.maxFilesLabel}: {maxFilesCount}
+      </p>
       {limitError ? (
         <p className="mt-2 text-xs font-bold text-(--accent)">{limitError}</p>
       ) : null}

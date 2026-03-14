@@ -6,12 +6,19 @@ import { MAX_FILE_SIZE_BYTES, MAX_FILES_COUNT } from '@/constants/upload';
 import { buildFileId, formatBytes } from '@/utils/files';
 import { SelectedFilesPanel } from '@/app/components/SelectedFilesPanel';
 import { UploadFilesPanel } from '@/app/components/UploadFilesPanel';
+import { UploadPinModal } from '@/app/components/UploadPinModal';
+import { UploadSuccessModal } from '@/app/components/UploadSuccessModal';
 
 export function FileTransferAside() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [limitError, setLimitError] = useState('');
+  const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+  const [pinValue, setPinValue] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [shareLink, setShareLink] = useState('');
 
   const addFiles = (incomingFiles: FileList | null) => {
     const nextFiles = Array.from(incomingFiles ?? []);
@@ -90,31 +97,103 @@ export function FileTransferAside() {
   };
 
   const onUploadFiles = () => {
-    setLimitError('Upload action will be connected to backend in the next step.');
+    setIsPinModalOpen(true);
+  };
+
+  const closePinModal = () => {
+    if (isUploading) return;
+    setIsPinModalOpen(false);
+    setPinValue('');
+  };
+
+  const onContinueUpload = async () => {
+    if (!/^\d{4}$/.test(pinValue) || files.length === 0) return;
+
+    setIsUploading(true);
+    setLimitError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('pin', pinValue);
+      for (const file of files) {
+        formData.append('files', file);
+      }
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const payload = (await response.json()) as {
+        message?: string;
+        code?: string;
+        shortLink?: string;
+      };
+      if (!response.ok) {
+        throw new Error(payload.message ?? 'Upload failed.');
+      }
+
+      const shortLink = payload.shortLink ?? (payload.code ? `/s/${payload.code}` : '');
+      const fullShareLink = shortLink
+        ? `${window.location.origin}${shortLink}`
+        : window.location.href;
+
+      setFiles([]);
+      setIsPinModalOpen(false);
+      setPinValue('');
+      setShareLink(fullShareLink);
+      setIsSuccessModalOpen(true);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Upload failed.';
+      setLimitError(message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const closeSuccessModal = () => {
+    setIsSuccessModalOpen(false);
+    setShareLink('');
   };
 
   return (
-    <aside
-      className="grid gap-4 grid-rows-[1fr_2fr] md:min-h-136"
-      id="file-transfer"
-    >
-      <UploadFilesPanel
-        fileInputRef={fileInputRef}
-        isDragging={isDragging}
-        limitError={limitError}
-        maxFileSizeLabel={formatBytes(MAX_FILE_SIZE_BYTES)}
-        maxFilesCount={MAX_FILES_COUNT}
-        onDropZoneDragLeave={onDragLeave}
-        onDropZoneDragOver={onDragOver}
-        onDropZoneDrop={onDrop}
-        onFileInputChange={onInputChange}
-        onOpenFilePicker={openFilePicker}
+    <>
+      <aside
+        className="grid gap-4 grid-rows-[1fr_2fr] md:min-h-136"
+        id="file-transfer"
+      >
+        <UploadFilesPanel
+          fileInputRef={fileInputRef}
+          isDragging={isDragging}
+          limitError={limitError}
+          maxFileSizeLabel={formatBytes(MAX_FILE_SIZE_BYTES)}
+          maxFilesCount={MAX_FILES_COUNT}
+          onDropZoneDragLeave={onDragLeave}
+          onDropZoneDragOver={onDragOver}
+          onDropZoneDrop={onDrop}
+          onFileInputChange={onInputChange}
+          onOpenFilePicker={openFilePicker}
+        />
+        <SelectedFilesPanel
+          files={files}
+          onRemoveFile={removeFile}
+          onUploadFiles={onUploadFiles}
+        />
+      </aside>
+
+      <UploadPinModal
+        isOpen={isPinModalOpen}
+        isSubmitting={isUploading}
+        onContinue={onContinueUpload}
+        onClose={closePinModal}
+        onPinChange={setPinValue}
+        pinValue={pinValue}
       />
-      <SelectedFilesPanel
-        files={files}
-        onRemoveFile={removeFile}
-        onUploadFiles={onUploadFiles}
+      <UploadSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={closeSuccessModal}
+        shareLink={shareLink}
       />
-    </aside>
+    </>
   );
 }

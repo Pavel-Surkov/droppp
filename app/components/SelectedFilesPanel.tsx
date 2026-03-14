@@ -3,19 +3,21 @@ import { buildFileId, formatBytes } from '@/utils/files';
 type SelectedFilesPanelProps = {
   files: File[];
   onRemoveFile: (id: string) => void;
+  onUploadFiles: () => void;
 };
 
 export function SelectedFilesPanel({
   files,
   onRemoveFile,
+  onUploadFiles,
 }: SelectedFilesPanelProps) {
   return (
-    <div className="rounded-[1.6rem] border-2 border-(--line) bg-white p-5 text-sm text-(--muted)">
+    <div className="flex h-full min-h-0 flex-col rounded-[1.6rem] border-2 border-(--line) bg-white p-5 text-sm text-(--muted)">
       <p className="font-bold text-(--ink)">Selected files</p>
       {!files.length ? (
-        <p className="mt-2">No files selected yet.</p>
+        <p className="mt-2 mb-auto">No files selected yet.</p>
       ) : (
-        <ul className="mt-3 max-h-72 space-y-2 overflow-y-auto pr-1">
+        <ul className="mt-3 mb-auto max-h-56 space-y-2 overflow-y-auto pr-1">
           {files.map((file) => {
             const id = buildFileId(file);
 
@@ -76,6 +78,15 @@ export function SelectedFilesPanel({
           })}
         </ul>
       )}
+      {files.length > 0 ? (
+        <button
+          className="mt-4 w-full cursor-pointer rounded-xl bg-(--accent) px-4 py-2 text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
+          onClick={onUploadFiles}
+          type="button"
+        >
+          Upload
+        </button>
+      ) : null}
     </div>
   );
 }

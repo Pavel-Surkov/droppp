@@ -89,6 +89,10 @@ export function FileTransferAside() {
     addFiles(event.dataTransfer.files);
   };
 
+  const onUploadFiles = () => {
+    setLimitError('Upload action will be connected to backend in the next step.');
+  };
+
   return (
     <aside
       className="grid gap-4 grid-rows-[1fr_2fr] md:min-h-136"
@@ -106,7 +110,11 @@ export function FileTransferAside() {
         onFileInputChange={onInputChange}
         onOpenFilePicker={openFilePicker}
       />
-      <SelectedFilesPanel files={files} onRemoveFile={removeFile} />
+      <SelectedFilesPanel
+        files={files}
+        onRemoveFile={removeFile}
+        onUploadFiles={onUploadFiles}
+      />
     </aside>
   );
 }

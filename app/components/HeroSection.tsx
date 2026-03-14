@@ -5,31 +5,20 @@ export function HeroSection() {
         No USB needed
       </p>
       <h1
-        className="text-4xl leading-16 font-bold md:text-6xl"
+        className="text-4xl leading-10 md:leading-16 font-bold md:text-6xl"
         style={{ fontFamily: 'Fraunces, serif' }}
       >
         Send your file,
         <br />
         carry just a tiny
         <br />
-        link.
+        link
       </h1>
       <p className="mt-5 max-w-xl text-sm leading-relaxed text-(--muted) md:text-base">
         Perfect for class presentations: upload from home, open from any
         university computer. Set file lifetime from 1 hour to 24 hours and
         optionally protect access with a 4-digit PIN.
       </p>
-      <div className="mt-7 flex flex-wrap gap-3">
-        <a
-          className="cursor-pointer rounded-2xl bg-(--accent) px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
-          href="#file-transfer"
-        >
-          Start upload
-        </a>
-        <button className="cursor-pointer rounded-2xl border border-(--line) bg-white px-5 py-3 text-sm font-bold text-(--ink)">
-          Open link
-        </button>
-      </div>
     </article>
   );
 }

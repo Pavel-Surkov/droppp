@@ -28,7 +28,7 @@ export function UploadFilesPanel({
   return (
     <div
       className={`rounded-[1.6rem] border-2 border-dashed border-(--line) p-5 transition-[background-color] duration-200 ${
-        isDragging ? 'bg-(--color-stormy-teal-100)' : 'bg-white'
+        isDragging ? 'bg-(--color-vibrant-coral-50)' : 'bg-white'
       }`}
       onDragOver={onDropZoneDragOver}
       onDragLeave={onDropZoneDragLeave}

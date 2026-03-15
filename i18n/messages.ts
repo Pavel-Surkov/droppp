@@ -49,6 +49,28 @@ export type AppMessages = {
     tooMany: string;
     uploadFailed: string;
   };
+  receiver: {
+    title: string;
+    description: string;
+    codeLabel: string;
+    expiresLabel: string;
+    loading: string;
+    notFoundTitle: string;
+    notFoundDescription: string;
+    expiredTitle: string;
+    expiredDescription: string;
+    filesTitle: string;
+    selectAtLeastOne: string;
+    pinTitle: string;
+    pinDescription: string;
+    pinInvalid: string;
+    continueButton: string;
+    checkingButton: string;
+    readyTitle: string;
+    readyDescription: string;
+    downloadSelected: string;
+    backHome: string;
+  };
 };
 
 const dictionaries: Record<Locale, AppMessages> = {
@@ -105,6 +127,31 @@ const dictionaries: Record<Locale, AppMessages> = {
       tooMany: '{count} файл(ов) пропущено: максимум {max} файлов.',
       uploadFailed: 'Ошибка загрузки.',
     },
+    receiver: {
+      title: 'Получение файлов',
+      description:
+        'Выберите файлы, введите PIN и скачайте материалы на это устройство.',
+      codeLabel: 'Код ссылки',
+      expiresLabel: 'Ссылка действует до',
+      loading: 'Загружаем информацию о файлах...',
+      notFoundTitle: 'Ссылка не найдена',
+      notFoundDescription:
+        'Проверьте ссылку и попробуйте снова. Возможно, она уже удалена.',
+      expiredTitle: 'Срок ссылки истек',
+      expiredDescription:
+        'Файлы удалены из хранилища после окончания времени хранения.',
+      filesTitle: 'Файлы для скачивания',
+      selectAtLeastOne: 'Выберите хотя бы один файл.',
+      pinTitle: 'Введите PIN',
+      pinDescription: 'Используйте 4-значный PIN, который сообщил отправитель.',
+      pinInvalid: 'Неверный PIN или ссылка больше недействительна.',
+      continueButton: 'Продолжить',
+      checkingButton: 'Проверка...',
+      readyTitle: 'Доступ открыт',
+      readyDescription: 'Теперь можно скачать выбранные файлы.',
+      downloadSelected: 'Скачать выбранные',
+      backHome: 'На главную',
+    },
   },
   en: {
     hero: {
@@ -157,6 +204,30 @@ const dictionaries: Record<Locale, AppMessages> = {
       tooLarge: '{count} file(s) skipped: max size is {size} per file.',
       tooMany: '{count} file(s) skipped: max {max} files allowed.',
       uploadFailed: 'Upload failed.',
+    },
+    receiver: {
+      title: 'Get files',
+      description: 'Choose files, enter PIN, and download them on this device.',
+      codeLabel: 'Share code',
+      expiresLabel: 'Available until',
+      loading: 'Loading shared files...',
+      notFoundTitle: 'Link not found',
+      notFoundDescription:
+        'Check the link and try again. It may already be deleted.',
+      expiredTitle: 'Link expired',
+      expiredDescription:
+        'Files were removed from storage after expiration time.',
+      filesTitle: 'Files to download',
+      selectAtLeastOne: 'Select at least one file.',
+      pinTitle: 'Enter PIN',
+      pinDescription: 'Use the 4-digit PIN provided by the sender.',
+      pinInvalid: 'Invalid PIN or the link is no longer available.',
+      continueButton: 'Continue',
+      checkingButton: 'Checking...',
+      readyTitle: 'Access granted',
+      readyDescription: 'You can now download selected files.',
+      downloadSelected: 'Download selected',
+      backHome: 'Back to home',
     },
   },
 };

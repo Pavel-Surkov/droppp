@@ -17,6 +17,11 @@ export type ShareMeta = {
   files: StoredFileMeta[];
 };
 
+export type ShareLookupResult =
+  | { status: 'active'; meta: ShareMeta }
+  | { status: 'expired' }
+  | { status: 'not_found' };
+
 export const STORAGE_ROOT = path.join(process.cwd(), 'storage');
 export const FILES_ROOT = path.join(STORAGE_ROOT, 'uploads');
 export const SHARES_ROOT = path.join(STORAGE_ROOT, 'shares');
@@ -60,4 +65,84 @@ export async function cleanupExpiredShares(now = new Date()) {
   }
 
   return { removed, failed };
+}
+
+function isShareMeta(value: unknown): value is ShareMeta {
+  if (!value || typeof value !== 'object') return false;
+
+  const candidate = value as Partial<ShareMeta>;
+  return (
+    typeof candidate.id === 'string' &&
+    typeof candidate.code === 'string' &&
+    typeof candidate.createdAt === 'string' &&
+    typeof candidate.expiresAt === 'string' &&
+    typeof candidate.pinHash === 'string' &&
+    Array.isArray(candidate.files)
+  );
+}
+
+export function isValidShareCode(code: string): boolean {
+  return /^[a-z0-9]{5}$/.test(code);
+}
+
+function getShareMetaPath(code: string): string {
+  return path.join(SHARES_ROOT, `${code}.json`);
+}
+
+async function removeShare(meta: ShareMeta): Promise<void> {
+  const uploadDir = path.join(FILES_ROOT, meta.id);
+  await fs.rm(uploadDir, { recursive: true, force: true });
+  await fs.rm(getShareMetaPath(meta.code), { force: true });
+}
+
+export async function findShareByCode(
+  code: string,
+  now = new Date(),
+): Promise<ShareLookupResult> {
+  if (!isValidShareCode(code)) {
+    return { status: 'not_found' };
+  }
+
+  await ensureStorageDirs();
+  const metaPath = getShareMetaPath(code);
+
+  let raw: string;
+  try {
+    raw = await fs.readFile(metaPath, 'utf8');
+  } catch {
+    return { status: 'not_found' };
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    await fs.rm(metaPath, { force: true });
+    return { status: 'not_found' };
+  }
+
+  if (!isShareMeta(parsed)) {
+    await fs.rm(metaPath, { force: true });
+    return { status: 'not_found' };
+  }
+
+  if (isExpired(parsed.expiresAt, now)) {
+    await removeShare(parsed);
+    return { status: 'expired' };
+  }
+
+  return { status: 'active', meta: parsed };
+}
+
+export function getShareFilePath(meta: ShareMeta, fileIndex: number): string | null {
+  const file = meta.files[fileIndex];
+  if (!file) return null;
+
+  const baseDir = path.join(FILES_ROOT, meta.id);
+  const targetPath = path.join(baseDir, file.storedName);
+  if (!targetPath.startsWith(`${baseDir}${path.sep}`)) {
+    return null;
+  }
+
+  return targetPath;
 }

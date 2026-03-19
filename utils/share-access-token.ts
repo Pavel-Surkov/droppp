@@ -6,10 +6,14 @@ type AccessTokenPayload = {
   exp: number;
 };
 
-const FALLBACK_SECRET = 'dropp-dev-secret-change-me';
-
 function getSecret(): string {
-  return process.env.SHARE_ACCESS_TOKEN_SECRET ?? FALLBACK_SECRET;
+  const secret = process.env.SHARE_ACCESS_TOKEN_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error(
+      'SHARE_ACCESS_TOKEN_SECRET must be set and at least 32 characters long.',
+    );
+  }
+  return secret;
 }
 
 function sign(input: string): string {

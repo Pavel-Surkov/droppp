@@ -34,6 +34,10 @@ Copy `.env.example` to `.env.local` and set values:
 cp .env.example .env.local
 ```
 
+Required variable:
+
+- `SHARE_ACCESS_TOKEN_SECRET` — random string, minimum 32 characters
+
 ## Scripts
 
 - `pnpm dev` — start development server

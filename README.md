@@ -49,6 +49,7 @@ Required variable:
 
 Current implementation stores files on local disk in `storage/` (excluded from git).
 For production usage, prefer object storage (S3/R2/MinIO).
+On Vercel serverless, fallback storage path is `/tmp/dropp-storage` (ephemeral per instance).
 
 ## Security
 

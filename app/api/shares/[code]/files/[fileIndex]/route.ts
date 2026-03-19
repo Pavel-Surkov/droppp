@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
-import { findShareByCode, getShareFilePath } from '@/lib/storage';
+import { findShareByCode, getShareFilePath, STORAGE_ROOT } from '@/lib/storage';
 import {
   consumeLimiter,
   downloadLimiter,
@@ -62,7 +62,7 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ message: 'File not found.' }, { status: 404 });
   }
 
-  const relative = path.relative(path.join(process.cwd(), 'storage'), filePath);
+  const relative = path.relative(STORAGE_ROOT, filePath);
   if (relative.startsWith('..')) {
     return NextResponse.json({ message: 'Invalid file path.' }, { status: 400 });
   }

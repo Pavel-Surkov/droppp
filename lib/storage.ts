@@ -22,7 +22,19 @@ export type ShareLookupResult =
   | { status: 'expired' }
   | { status: 'not_found' };
 
-export const STORAGE_ROOT = path.join(process.cwd(), 'storage');
+function resolveStorageRoot(): string {
+  const fromEnv = process.env.STORAGE_ROOT_DIR?.trim();
+  if (fromEnv) return fromEnv;
+
+  if (process.env.VERCEL) {
+    // /var/task is read-only on Vercel serverless runtime; use writable /tmp.
+    return path.join('/tmp', 'dropp-storage');
+  }
+
+  return path.join(process.cwd(), 'storage');
+}
+
+export const STORAGE_ROOT = resolveStorageRoot();
 export const FILES_ROOT = path.join(STORAGE_ROOT, 'uploads');
 export const SHARES_ROOT = path.join(STORAGE_ROOT, 'shares');
 

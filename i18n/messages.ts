@@ -153,7 +153,7 @@ const dictionaries: Record<Locale, AppMessages> = {
       selectAtLeastOne: 'Выберите хотя бы один файл.',
       pinTitle: 'Введите PIN',
       pinDescription: 'Используйте 4-значный PIN, который сообщил отправитель.',
-      pinInvalid: 'Неверный PIN или ссылка больше недействительна.',
+      pinInvalid: 'Неверный PIN.',
       continueButton: 'Продолжить',
       checkingButton: 'Проверка...',
       readyTitle: 'Доступ открыт',

@@ -180,7 +180,7 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
 
     return (
       <section className="rounded-[1.6rem] border-2 border-(--line) bg-white p-6 text-(--ink)">
-        <h1 className="font-['Fraunces'] text-3xl font-bold">{title}</h1>
+        <h1 className="font-['Nunito'] text-3xl font-extrabold">{title}</h1>
         <p className="mt-3 text-(--muted)">{description}</p>
         <a
           className="mt-5 inline-flex cursor-pointer rounded-xl bg-(--accent) px-4 py-2 font-bold text-white"
@@ -194,7 +194,7 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
 
   return (
     <section className="rounded-[1.6rem] border-2 border-(--line) bg-white p-6">
-      <h1 className="font-['Fraunces'] text-3xl font-bold text-(--ink)">
+      <h1 className="font-['Nunito'] text-3xl font-extrabold text-(--ink)">
         {messages.title}
       </h1>
       <p className="mt-2 text-(--muted)">{messages.description}</p>

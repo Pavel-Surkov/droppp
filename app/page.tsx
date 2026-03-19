@@ -18,7 +18,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <LanguageSwitcher locale={locale} />
       </div>
       <section className="grid w-full gap-4 md:gap-6 md:grid-cols-[1.1fr_0.9fr]">
-        <HeroSection messages={messages.hero} />
+        <HeroSection locale={locale} messages={messages.hero} />
         <FileTransferAside messages={messages} />
       </section>
     </main>

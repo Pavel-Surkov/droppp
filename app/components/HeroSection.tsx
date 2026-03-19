@@ -1,28 +1,30 @@
-import type { AppMessages } from '@/i18n/messages';
+import type { AppMessages, Locale } from '@/i18n/messages';
 
 type HeroSectionProps = {
   messages: AppMessages['hero'];
+  locale: Locale;
 };
 
-export function HeroSection({ messages }: HeroSectionProps) {
+export function HeroSection({ messages, locale }: HeroSectionProps) {
   return (
-    <article className="rounded-4xl border-2 border-(--line) bg-(--card) p-6 md:p-9 md:shadow-[0_18px_48px_rgba(0,0,0,0.2)]">
-      <p className="mb-5 inline-flex rounded-full bg-(--soft) px-3 py-1 text-xs font-bold tracking-wide text-(--muted)">
+    <article className="flex h-full flex-col rounded-4xl border-2 border-(--line) bg-(--card) p-6 md:p-9 md:shadow-[0_18px_48px_rgba(0,0,0,0.2)]">
+      <p className="mb-5 inline-flex self-start rounded-full bg-(--soft) px-3 py-1 text-xs font-bold tracking-wide text-(--muted)">
         {messages.badge}
       </p>
       <h1
-        className="text-4xl leading-10 md:leading-16 font-bold md:text-6xl"
-        style={{ fontFamily: 'Fraunces, serif' }}
+        className="font-['Nunito'] text-4xl leading-10 font-extrabold md:text-6xl md:leading-16"
       >
-        {messages.titleLine1}
-        <br />
-        {messages.titleLine2}
-        <br />
-        {messages.titleLine3}
+        {messages.title}
       </h1>
-      <p className="mt-5 max-w-xl text-sm leading-relaxed text-(--muted) md:text-base">
+      <p className="mt-5 max-w-xl whitespace-pre-line text-sm leading-relaxed text-(--muted) md:text-base">
         {messages.description}
       </p>
+      <a
+        className="mt-auto pt-5 inline-flex text-sm font-bold text-(--accent) underline-offset-2 hover:underline"
+        href={`/legal?lang=${locale}`}
+      >
+        {messages.legalLink}
+      </a>
     </article>
   );
 }

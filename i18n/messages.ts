@@ -3,10 +3,9 @@ export type Locale = 'ru' | 'en';
 export type AppMessages = {
   hero: {
     badge: string;
-    titleLine1: string;
-    titleLine2: string;
-    titleLine3: string;
+    title: string;
     description: string;
+    legalLink: string;
   };
   uploadPanel: {
     title: string;
@@ -73,17 +72,24 @@ export type AppMessages = {
     downloadZip: string;
     backHome: string;
   };
+  legal: {
+    title: string;
+    description: string;
+    userResponsibility: string;
+    ownerDisclaimer: string;
+    securityNotice: string;
+    backHome: string;
+  };
 };
 
 const dictionaries: Record<Locale, AppMessages> = {
   ru: {
     hero: {
       badge: 'Без USB',
-      titleLine1: 'Отправь файл,',
-      titleLine2: 'сохрани только',
-      titleLine3: 'короткую ссылку',
+      title: 'Droppp',
       description:
-        'Идеально для презентаций: загрузи дома, открой на любом университетском компьютере. Время хранения по умолчанию 1 час (до 24 часов), доступ по ссылке и 4-значному PIN.',
+        'Сервис помогает быстро передавать файлы между устройствами по короткой ссылке и PIN-коду без регистрации.\nЭто удобно, когда нужно открыть презентацию или документы на чужом компьютере.\nФайлы хранятся ограниченное время и автоматически удаляются после истечения срока.',
+      legalLink: 'Правила и условия',
     },
     uploadPanel: {
       title: 'Загрузка файлов',
@@ -151,20 +157,32 @@ const dictionaries: Record<Locale, AppMessages> = {
       continueButton: 'Продолжить',
       checkingButton: 'Проверка...',
       readyTitle: 'Доступ открыт',
-      readyDescription: 'Выберите нужные файлы и скачайте их по отдельности или ZIP-архивом.',
+      readyDescription:
+        'Выберите нужные файлы и скачайте их по отдельности или ZIP-архивом.',
       downloadSelected: 'Скачать выбранные',
       downloadZip: 'Скачать ZIP',
+      backHome: 'На главную',
+    },
+    legal: {
+      title: 'Правила использования',
+      description:
+        'Сервис предназначен для временного обмена файлами по ссылке и PIN-коду.',
+      userResponsibility:
+        'Пользователь самостоятельно несет ответственность за содержание и законность загружаемых файлов.',
+      ownerDisclaimer:
+        'Владелец сервиса не несет ответственности за последствия использования сервиса, включая возможную утечку или кражу файлов третьими лицами.',
+      securityNotice:
+        'Не загружайте данные, которые не готовы передавать через публичный интернет.',
       backHome: 'На главную',
     },
   },
   en: {
     hero: {
       badge: 'No USB needed',
-      titleLine1: 'Send your file,',
-      titleLine2: 'carry just a tiny',
-      titleLine3: 'link',
+      title: 'Droppp',
       description:
-        'Perfect for class presentations: upload from home, open from any university computer. Default storage time is 1 hour (up to 24 hours), access is protected by short link + 4-digit PIN.',
+        'This service lets you quickly transfer files between devices using a short link and PIN, without sign-up.\nIt is useful when you need to open a presentation or documents on another computer.\nFiles are stored for a limited time and then deleted automatically.',
+      legalLink: 'Rules and legal',
     },
     uploadPanel: {
       title: 'Upload files',
@@ -182,7 +200,8 @@ const dictionaries: Record<Locale, AppMessages> = {
     },
     pinModal: {
       title: 'Enter a PIN',
-      description: 'The recipient will need to enter this PIN to access the files.',
+      description:
+        'The recipient will need to enter this PIN to access the files.',
       reminder:
         'Save this PIN somewhere safe. You will need it to share file access.',
       closeAria: 'Close PIN modal',
@@ -211,7 +230,8 @@ const dictionaries: Record<Locale, AppMessages> = {
     },
     receiver: {
       title: 'Get files',
-      description: 'Enter PIN to unlock the file list and download files on this device.',
+      description:
+        'Enter PIN to unlock the file list and download files on this device.',
       codeLabel: 'Share code',
       expiresLabel: 'Available until',
       filesCountLabel: 'Files in share',
@@ -230,9 +250,22 @@ const dictionaries: Record<Locale, AppMessages> = {
       continueButton: 'Continue',
       checkingButton: 'Checking...',
       readyTitle: 'Access granted',
-      readyDescription: 'Choose files and download them individually or as ZIP archive.',
+      readyDescription:
+        'Choose files and download them individually or as ZIP archive.',
       downloadSelected: 'Download selected',
       downloadZip: 'Download ZIP',
+      backHome: 'Back to home',
+    },
+    legal: {
+      title: 'Terms of Use',
+      description:
+        'The service is intended for temporary file sharing via link and PIN.',
+      userResponsibility:
+        'Users are fully responsible for the legality and content of uploaded files.',
+      ownerDisclaimer:
+        'The service owner is not liable for consequences of service usage, including possible data leaks or file theft by third parties.',
+      securityNotice:
+        'Do not upload data you are not ready to transfer over the public internet.',
       backHome: 'Back to home',
     },
   },

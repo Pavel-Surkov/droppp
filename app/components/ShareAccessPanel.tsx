@@ -16,7 +16,7 @@ type SharePayload = {
   code: string;
   createdAt: string;
   expiresAt: string;
-  files: SharedFile[];
+  filesCount: number;
 };
 
 type ShareStatus = 'loading' | 'ready' | 'not_found' | 'expired' | 'error';
@@ -42,6 +42,7 @@ function formatDate(value: string, locale: Locale): string {
 export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelProps) {
   const [status, setStatus] = useState<ShareStatus>('loading');
   const [share, setShare] = useState<SharePayload | null>(null);
+  const [files, setFiles] = useState<SharedFile[]>([]);
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
   const [pinValue, setPinValue] = useState('');
   const [token, setToken] = useState('');
@@ -73,7 +74,8 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
 
         if (!cancelled) {
           setShare(payload as SharePayload);
-          setSelectedIndexes((payload as SharePayload).files.map((file) => file.index));
+          setFiles([]);
+          setSelectedIndexes([]);
           setStatus('ready');
         }
       } catch {
@@ -88,10 +90,10 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
   }, [code]);
 
   const selectedFiles = useMemo(() => {
-    if (!share) return [];
+    if (!files.length) return [];
     const selected = new Set(selectedIndexes);
-    return share.files.filter((file) => selected.has(file.index));
-  }, [selectedIndexes, share]);
+    return files.filter((file) => selected.has(file.index));
+  }, [files, selectedIndexes]);
 
   const toggleSelected = (index: number) => {
     setSelectedIndexes((prev) => {
@@ -102,10 +104,6 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
 
   const onVerifyPin = async () => {
     if (!share) return;
-    if (selectedIndexes.length === 0) {
-      setErrorMessage(messages.selectAtLeastOne);
-      return;
-    }
     if (!/^\d{4}$/.test(pinValue)) return;
 
     setIsCheckingPin(true);
@@ -117,13 +115,19 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ pin: pinValue }),
       });
-      const payload = (await response.json()) as { token?: string; message?: string };
+      const payload = (await response.json()) as {
+        token?: string;
+        files?: SharedFile[];
+        message?: string;
+      };
 
-      if (!response.ok || !payload.token) {
+      if (!response.ok || !payload.token || !payload.files) {
         throw new Error(payload.message ?? messages.pinInvalid);
       }
 
       setToken(payload.token);
+      setFiles(payload.files);
+      setSelectedIndexes(payload.files.map((file) => file.index));
       setPinValue('');
     } catch {
       setErrorMessage(messages.pinInvalid);
@@ -143,6 +147,21 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
       link.click();
       link.remove();
     }
+  };
+
+  const downloadZip = () => {
+    if (!share || !token || selectedFiles.length === 0) {
+      setErrorMessage(messages.selectAtLeastOne);
+      return;
+    }
+
+    const indexes = selectedFiles.map((file) => file.index).join(',');
+    const link = document.createElement('a');
+    link.href = `/api/shares/${share.code}/archive?token=${encodeURIComponent(token)}&files=${encodeURIComponent(indexes)}`;
+    link.download = `dropp-${share.code}.zip`;
+    document.body.append(link);
+    link.click();
+    link.remove();
   };
 
   if (status === 'loading') {
@@ -189,35 +208,10 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
           <span className="font-bold text-(--ink)">{messages.expiresLabel}:</span>{' '}
           {formatDate(share.expiresAt, locale)}
         </p>
-      </div>
-
-      <div className="mt-5 rounded-xl border border-(--line) bg-(--card) p-4">
-        <p className="font-bold text-(--ink)">{messages.filesTitle}</p>
-        <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
-          {share.files.map((file) => (
-            <li
-              className="flex items-center justify-between rounded-lg border border-(--line) bg-white px-3 py-2"
-              key={file.index}
-            >
-              <label className="flex min-w-0 cursor-pointer items-center gap-3">
-                <input
-                  checked={selectedIndexes.includes(file.index)}
-                  className="h-4 w-4 cursor-pointer accent-(--accent)"
-                  onChange={() => toggleSelected(file.index)}
-                  type="checkbox"
-                />
-                <span className="min-w-0">
-                  <span className="block truncate font-bold text-(--ink)">
-                    {file.name}
-                  </span>
-                  <span className="text-xs text-(--muted)">
-                    {formatBytes(file.size)}
-                  </span>
-                </span>
-              </label>
-            </li>
-          ))}
-        </ul>
+        <p>
+          <span className="font-bold text-(--ink)">{messages.filesCountLabel}:</span>{' '}
+          {share.filesCount}
+        </p>
       </div>
 
       {!token ? (
@@ -245,17 +239,63 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
           </button>
         </form>
       ) : (
-        <div className="mt-5 rounded-xl border border-(--line) bg-(--card) p-4">
-          <p className="font-bold text-(--ink)">{messages.readyTitle}</p>
-          <p className="mt-1 text-sm text-(--muted)">{messages.readyDescription}</p>
-          <button
-            className="mt-4 w-full cursor-pointer rounded-xl bg-(--accent) px-4 py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={selectedFiles.length === 0}
-            onClick={downloadSelected}
-            type="button"
-          >
-            {messages.downloadSelected}
-          </button>
+        <div className="mt-5 space-y-4">
+          <div className="rounded-xl border border-(--line) bg-(--card) p-4">
+            <p className="font-bold text-(--ink)">{messages.readyTitle}</p>
+            <p className="mt-1 text-sm text-(--muted)">{messages.readyDescription}</p>
+          </div>
+
+          <div className="rounded-xl border border-(--line) bg-(--card) p-4">
+            <p className="font-bold text-(--ink)">{messages.filesTitle}</p>
+            <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
+              {files.map((file) => (
+                <li
+                  className="flex items-center justify-between rounded-lg border border-(--line) bg-white px-3 py-2"
+                  key={file.index}
+                >
+                  <label className="flex min-w-0 cursor-pointer items-center gap-3">
+                    <input
+                      checked={selectedIndexes.includes(file.index)}
+                      className="h-4 w-4 cursor-pointer accent-(--accent)"
+                      onChange={() => toggleSelected(file.index)}
+                      type="checkbox"
+                    />
+                    <span className="min-w-0">
+                      <span className="block truncate font-bold text-(--ink)">
+                        {file.name}
+                      </span>
+                      <span className="text-xs text-(--muted)">
+                        {formatBytes(file.size)}
+                      </span>
+                    </span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {errorMessage ? (
+            <p className="text-sm text-(--accent)">{errorMessage}</p>
+          ) : null}
+
+          <div className="grid gap-3 md:grid-cols-2">
+            <button
+              className="w-full cursor-pointer rounded-xl bg-(--accent) px-4 py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={selectedFiles.length === 0}
+              onClick={downloadSelected}
+              type="button"
+            >
+              {messages.downloadSelected}
+            </button>
+            <button
+              className="w-full cursor-pointer rounded-xl border-2 border-(--line) bg-white px-4 py-2 font-bold text-(--ink) disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={selectedFiles.length === 0}
+              onClick={downloadZip}
+              type="button"
+            >
+              {messages.downloadZip}
+            </button>
+          </div>
         </div>
       )}
     </section>

@@ -54,6 +54,7 @@ export type AppMessages = {
     description: string;
     codeLabel: string;
     expiresLabel: string;
+    filesCountLabel: string;
     loading: string;
     notFoundTitle: string;
     notFoundDescription: string;
@@ -69,6 +70,7 @@ export type AppMessages = {
     readyTitle: string;
     readyDescription: string;
     downloadSelected: string;
+    downloadZip: string;
     backHome: string;
   };
 };
@@ -130,9 +132,10 @@ const dictionaries: Record<Locale, AppMessages> = {
     receiver: {
       title: 'Получение файлов',
       description:
-        'Выберите файлы, введите PIN и скачайте материалы на это устройство.',
+        'Введите PIN, чтобы открыть список файлов и скачать их на это устройство.',
       codeLabel: 'Код ссылки',
       expiresLabel: 'Ссылка действует до',
+      filesCountLabel: 'Файлов в отправке',
       loading: 'Загружаем информацию о файлах...',
       notFoundTitle: 'Ссылка не найдена',
       notFoundDescription:
@@ -148,8 +151,9 @@ const dictionaries: Record<Locale, AppMessages> = {
       continueButton: 'Продолжить',
       checkingButton: 'Проверка...',
       readyTitle: 'Доступ открыт',
-      readyDescription: 'Теперь можно скачать выбранные файлы.',
+      readyDescription: 'Выберите нужные файлы и скачайте их по отдельности или ZIP-архивом.',
       downloadSelected: 'Скачать выбранные',
+      downloadZip: 'Скачать ZIP',
       backHome: 'На главную',
     },
   },
@@ -207,9 +211,10 @@ const dictionaries: Record<Locale, AppMessages> = {
     },
     receiver: {
       title: 'Get files',
-      description: 'Choose files, enter PIN, and download them on this device.',
+      description: 'Enter PIN to unlock the file list and download files on this device.',
       codeLabel: 'Share code',
       expiresLabel: 'Available until',
+      filesCountLabel: 'Files in share',
       loading: 'Loading shared files...',
       notFoundTitle: 'Link not found',
       notFoundDescription:
@@ -225,8 +230,9 @@ const dictionaries: Record<Locale, AppMessages> = {
       continueButton: 'Continue',
       checkingButton: 'Checking...',
       readyTitle: 'Access granted',
-      readyDescription: 'You can now download selected files.',
+      readyDescription: 'Choose files and download them individually or as ZIP archive.',
       downloadSelected: 'Download selected',
+      downloadZip: 'Download ZIP',
       backHome: 'Back to home',
     },
   },

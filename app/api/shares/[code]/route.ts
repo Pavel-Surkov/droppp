@@ -24,12 +24,7 @@ export async function GET(_: Request, context: RouteContext) {
     code: result.meta.code,
     createdAt: result.meta.createdAt,
     expiresAt: result.meta.expiresAt,
-    files: result.meta.files.map((file, index) => ({
-      index,
-      name: file.originalName,
-      mimeType: file.mimeType,
-      size: file.size,
-    })),
+    filesCount: result.meta.files.length,
   });
 }
 
@@ -67,5 +62,11 @@ export async function POST(request: Request, context: RouteContext) {
 
   return NextResponse.json({
     token: createShareAccessToken(result.meta.code),
+    files: result.meta.files.map((file, index) => ({
+      index,
+      name: file.originalName,
+      mimeType: file.mimeType,
+      size: file.size,
+    })),
   });
 }

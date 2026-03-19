@@ -4,8 +4,9 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Dropp',
-  description: 'Быстрый обмен файлами по короткой ссылке',
+  title: 'Droppp — обмен файлами по короткой ссылке и PIN',
+  description:
+    'Передавайте файлы между устройствами без регистрации: короткая ссылка, PIN-доступ, скачивание отдельных файлов или ZIP и автоматическое удаление по времени.',
 };
 
 type RootLayoutProps = {
@@ -14,7 +15,7 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <Analytics />
       <body>{children}</body>
     </html>

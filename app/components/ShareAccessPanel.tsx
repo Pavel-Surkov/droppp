@@ -52,6 +52,7 @@ export function ShareAccessPanel({
   const [token, setToken] = useState('');
   const [isCheckingPin, setIsCheckingPin] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [pinInputResetKey, setPinInputResetKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -138,6 +139,8 @@ export function ShareAccessPanel({
       setSelectedIndexes(payload.files.map((file) => file.index));
       setPinValue('');
     } catch {
+      setPinValue('');
+      setPinInputResetKey((prev) => prev + 1);
       setErrorMessage(messages.pinInvalid);
     } finally {
       setIsCheckingPin(false);
@@ -245,7 +248,11 @@ export function ShareAccessPanel({
           <p className="mt-1 text-sm text-(--muted)">
             {messages.pinDescription}
           </p>
-          <PinInput onChange={setPinValue} value={pinValue} />
+          <PinInput
+            key={pinInputResetKey}
+            onChange={setPinValue}
+            value={pinValue}
+          />
 
           {errorMessage ? (
             <p className="mt-3 text-sm text-(--accent)">{errorMessage}</p>

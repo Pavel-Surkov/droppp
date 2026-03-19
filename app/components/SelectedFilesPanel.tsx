@@ -15,7 +15,7 @@ export function SelectedFilesPanel({
   onUploadFiles,
 }: SelectedFilesPanelProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-[1.6rem] bg-white p-5 text-sm text-(--muted)">
+    <div className="flex min-w-0 h-full min-h-0 flex-col rounded-[1.6rem] bg-white p-5 text-sm text-(--muted)">
       <p className="font-bold text-(--ink)">{messages.title}</p>
       {!files.length ? (
         <p className="mt-2 mb-auto">{messages.empty}</p>
@@ -32,7 +32,7 @@ export function SelectedFilesPanel({
                 <div className="flex min-w-0 items-center gap-2">
                   <svg
                     aria-hidden="true"
-                    className="h-5 w-5 shrink-0 text-(--accent-2)"
+                    className="h-6 w-6 shrink-0 text-(--accent-2)"
                     fill="none"
                     viewBox="0 0 24 24"
                   >

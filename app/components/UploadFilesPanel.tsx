@@ -30,7 +30,7 @@ export function UploadFilesPanel({
 }: UploadFilesPanelProps) {
   return (
     <div
-      className={`rounded-[1.6rem] border-2 border-dashed border-(--line) p-5 transition-[background-color] duration-200 ${
+      className={`min-w-0 rounded-[1.6rem] border-2 border-dashed border-(--line) p-5 transition-[background-color] duration-200 ${
         isDragging ? 'bg-(--color-vibrant-coral-50)' : 'bg-white'
       }`}
       onDragOver={onDropZoneDragOver}

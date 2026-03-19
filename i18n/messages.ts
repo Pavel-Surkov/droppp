@@ -25,6 +25,12 @@ export type AppMessages = {
     title: string;
     description: string;
     reminder: string;
+    ttlLabel: string;
+    ttlHint: string;
+    ttlOneHour: string;
+    ttlSixHours: string;
+    ttlTwelveHours: string;
+    ttlTwentyFourHours: string;
     closeAria: string;
     continueButton: string;
     uploadingButton: string;
@@ -111,6 +117,12 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Получателю нужно будет ввести этот PIN для доступа к файлам.',
       reminder:
         'Сохраните PIN в надежном месте, чтобы не потерять доступ к файлам.',
+      ttlLabel: 'Время хранения',
+      ttlHint: 'Файлы удалятся автоматически после выбранного срока.',
+      ttlOneHour: '1 ч',
+      ttlSixHours: '6 ч',
+      ttlTwelveHours: '12 ч',
+      ttlTwentyFourHours: '24 ч',
       closeAria: 'Закрыть окно PIN',
       continueButton: 'Продолжить',
       uploadingButton: 'Загрузка...',
@@ -204,6 +216,12 @@ const dictionaries: Record<Locale, AppMessages> = {
         'The recipient will need to enter this PIN to access the files.',
       reminder:
         'Save this PIN somewhere safe. You will need it to share file access.',
+      ttlLabel: 'Storage time',
+      ttlHint: 'Files are deleted automatically after the selected time.',
+      ttlOneHour: '1h',
+      ttlSixHours: '6h',
+      ttlTwelveHours: '12h',
+      ttlTwentyFourHours: '24h',
       closeAria: 'Close PIN modal',
       continueButton: 'Continue',
       uploadingButton: 'Uploading...',

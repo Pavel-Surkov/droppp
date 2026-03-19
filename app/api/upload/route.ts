@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
 import {
-  DEFAULT_STORAGE_TTL_SECONDS,
+  DEFAULT_STORAGE_TTL_HOURS,
   MAX_FILES_COUNT,
   MAX_FILE_SIZE_BYTES,
 } from '@/constants/upload';
@@ -16,8 +16,10 @@ import {
   type StoredFileMeta,
 } from '@/lib/storage';
 import { consumeLimiter, getClientIp, uploadLimiter } from '@/lib/rate-limit';
+import { parseStorageTtlHours } from '@/utils/upload';
 
 export const runtime = 'nodejs';
+const HOUR_IN_MS = 60 * 60 * 1000;
 
 function sanitizeFileName(name: string): string {
   return name.replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -58,10 +60,22 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const pin = String(formData.get('pin') ?? '');
+    const ttlRaw = formData.get('ttlHours');
+    const ttlHours =
+      ttlRaw === null
+        ? DEFAULT_STORAGE_TTL_HOURS
+        : parseStorageTtlHours(ttlRaw);
 
     if (!/^\d{4}$/.test(pin)) {
       return NextResponse.json(
         { message: 'PIN must contain exactly 4 digits.' },
+        { status: 400 },
+      );
+    }
+
+    if (ttlHours === null) {
+      return NextResponse.json(
+        { message: 'Invalid storage time value.' },
         { status: 400 },
       );
     }
@@ -118,9 +132,7 @@ export async function POST(request: Request) {
     }
 
     const createdAt = new Date();
-    const expiresAt = new Date(
-      createdAt.getTime() + DEFAULT_STORAGE_TTL_SECONDS * 1000,
-    );
+    const expiresAt = new Date(createdAt.getTime() + ttlHours * HOUR_IN_MS);
     const pinHash = createHash('sha256').update(pin).digest('hex');
 
     const metadata: ShareMeta = {

@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  DEFAULT_STORAGE_TTL_HOURS,
+  type StorageTtlHours,
+} from '@/constants/upload';
 
 type UseUploadFlowParams = {
   files: File[];
@@ -22,6 +26,9 @@ export function useUploadFlow({
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [shareLink, setShareLink] = useState('');
+  const [storageTtlHours, setStorageTtlHours] = useState<StorageTtlHours>(
+    DEFAULT_STORAGE_TTL_HOURS,
+  );
 
   const openPinModal = () => {
     setIsPinModalOpen(true);
@@ -31,6 +38,7 @@ export function useUploadFlow({
     if (isUploading) return;
     setIsPinModalOpen(false);
     setPinValue('');
+    setStorageTtlHours(DEFAULT_STORAGE_TTL_HOURS);
   };
 
   const closeSuccessModal = () => {
@@ -47,6 +55,7 @@ export function useUploadFlow({
     try {
       const formData = new FormData();
       formData.append('pin', pinValue);
+      formData.append('ttlHours', String(storageTtlHours));
       for (const file of files) {
         formData.append('files', file);
       }
@@ -73,6 +82,7 @@ export function useUploadFlow({
       clearSelectedFiles();
       setIsPinModalOpen(false);
       setPinValue('');
+      setStorageTtlHours(DEFAULT_STORAGE_TTL_HOURS);
       setShareLink(fullShareLink);
       setIsSuccessModalOpen(true);
     } catch (error) {
@@ -90,7 +100,9 @@ export function useUploadFlow({
     isUploading,
     isSuccessModalOpen,
     shareLink,
+    storageTtlHours,
     setPinValue,
+    setStorageTtlHours,
     openPinModal,
     closePinModal,
     closeSuccessModal,

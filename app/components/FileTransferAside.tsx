@@ -42,7 +42,9 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
     isUploading,
     isSuccessModalOpen,
     shareLink,
+    storageTtlHours,
     setPinValue,
+    setStorageTtlHours,
     openPinModal,
     closePinModal,
     closeSuccessModal,
@@ -58,7 +60,7 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
   return (
     <>
       <aside
-        className="grid gap-4 grid-rows-[1fr_2fr] md:min-h-136"
+        className="grid min-w-0 gap-4 grid-rows-[1fr_2fr] md:min-h-136"
         id="file-transfer"
       >
         <UploadFilesPanel
@@ -90,6 +92,8 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
         onClose={closePinModal}
         onPinChange={setPinValue}
         pinValue={pinValue}
+        selectedTtlHours={storageTtlHours}
+        onTtlChange={setStorageTtlHours}
       />
       <UploadSuccessModal
         messages={messages.successModal}

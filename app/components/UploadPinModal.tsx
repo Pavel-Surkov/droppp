@@ -1,4 +1,8 @@
 import { PinInput } from '@/app/components/PinInput';
+import {
+  STORAGE_TTL_HOURS_OPTIONS,
+  type StorageTtlHours,
+} from '@/constants/upload';
 import type { AppMessages } from '@/i18n/messages';
 
 type UploadPinModalProps = {
@@ -6,8 +10,10 @@ type UploadPinModalProps = {
   isOpen: boolean;
   isSubmitting: boolean;
   pinValue: string;
+  selectedTtlHours: StorageTtlHours;
   onClose: () => void;
   onPinChange: (value: string) => void;
+  onTtlChange: (value: StorageTtlHours) => void;
   onContinue: () => Promise<void>;
 };
 
@@ -16,12 +22,20 @@ export function UploadPinModal({
   isOpen,
   isSubmitting,
   pinValue,
+  selectedTtlHours,
   onClose,
   onPinChange,
+  onTtlChange,
   onContinue,
 }: UploadPinModalProps) {
   if (!isOpen) return null;
   const isPinComplete = /^\d{4}$/.test(pinValue);
+  const ttlLabels: Record<StorageTtlHours, string> = {
+    1: messages.ttlOneHour,
+    6: messages.ttlSixHours,
+    12: messages.ttlTwelveHours,
+    24: messages.ttlTwentyFourHours,
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--overlay) px-4">
@@ -68,6 +82,33 @@ export function UploadPinModal({
         <p className="mt-3 text-center text-xs text-(--muted) px-8">
           {messages.reminder}
         </p>
+        <fieldset className="mt-4">
+          <legend className="text-sm font-bold text-(--ink)">
+            {messages.ttlLabel}
+          </legend>
+          <div className="mt-2 grid grid-cols-4 gap-2">
+            {STORAGE_TTL_HOURS_OPTIONS.map((hours) => {
+              const isActive = selectedTtlHours === hours;
+
+              return (
+                <button
+                  aria-pressed={isActive}
+                  className={`cursor-pointer rounded-lg border px-2 py-2 text-sm font-bold transition ${
+                    isActive
+                      ? 'border-(--accent) bg-(--highlight) text-(--ink)'
+                      : 'border-(--line) bg-white text-(--muted) hover:bg-(--highlight)'
+                  }`}
+                  key={hours}
+                  onClick={() => onTtlChange(hours)}
+                  type="button"
+                >
+                  {ttlLabels[hours]}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 text-xs text-(--muted)">{messages.ttlHint}</p>
+        </fieldset>
         <button
           className="mt-5 w-full cursor-pointer rounded-xl bg-(--accent) px-4 py-2.5 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!isPinComplete || isSubmitting}

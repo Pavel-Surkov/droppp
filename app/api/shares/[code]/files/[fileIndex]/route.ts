@@ -2,6 +2,11 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
 import { findShareByCode, getShareFilePath } from '@/lib/storage';
+import {
+  consumeLimiter,
+  downloadLimiter,
+  getClientIp,
+} from '@/lib/rate-limit';
 import { verifyShareAccessToken } from '@/utils/share-access-token';
 
 export const runtime = 'nodejs';
@@ -17,6 +22,20 @@ function encodeFileName(name: string): string {
 }
 
 export async function GET(request: Request, context: RouteContext) {
+  const ip = getClientIp(request);
+  const rateLimit = await consumeLimiter(downloadLimiter, `download:${ip}`);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { message: 'Too many download requests. Try again later.' },
+      {
+        status: 429,
+        headers: {
+          'retry-after': String(rateLimit.retryAfterSeconds),
+        },
+      },
+    );
+  }
+
   const { code, fileIndex } = await context.params;
   const token = new URL(request.url).searchParams.get('token') ?? '';
 

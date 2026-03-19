@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import { promisify } from 'util';
 import { NextResponse } from 'next/server';
+import { archiveLimiter, consumeLimiter, getClientIp } from '@/lib/rate-limit';
 import { findShareByCode, getShareFilePath } from '@/lib/storage';
 import { verifyShareAccessToken } from '@/utils/share-access-token';
 
@@ -34,6 +35,20 @@ function encodeFileName(name: string): string {
 }
 
 export async function GET(request: Request, context: RouteContext) {
+  const ip = getClientIp(request);
+  const rateLimit = await consumeLimiter(archiveLimiter, `archive:${ip}`);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { message: 'Too many archive requests. Try again later.' },
+      {
+        status: 429,
+        headers: {
+          'retry-after': String(rateLimit.retryAfterSeconds),
+        },
+      },
+    );
+  }
+
   const { code } = await context.params;
   const url = new URL(request.url);
   const token = url.searchParams.get('token') ?? '';

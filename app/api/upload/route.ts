@@ -15,6 +15,7 @@ import {
   type ShareMeta,
   type StoredFileMeta,
 } from '@/lib/storage';
+import { consumeLimiter, getClientIp, uploadLimiter } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -40,6 +41,20 @@ async function createUniqueCode(): Promise<string> {
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rateLimit = await consumeLimiter(uploadLimiter, `upload:${ip}`);
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { message: 'Too many upload requests. Try again later.' },
+      {
+        status: 429,
+        headers: {
+          'retry-after': String(rateLimit.retryAfterSeconds),
+        },
+      },
+    );
+  }
+
   try {
     const formData = await request.formData();
     const pin = String(formData.get('pin') ?? '');

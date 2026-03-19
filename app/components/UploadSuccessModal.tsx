@@ -22,7 +22,7 @@ export function UploadSuccessModal({
     try {
       await navigator.clipboard.writeText(shareLink);
       setInfoMessage(messages.copied);
-    } catch {
+    } catch (err) {
       setInfoMessage(messages.copyFailed);
     }
   };
@@ -46,8 +46,8 @@ export function UploadSuccessModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--color-shadow-grey-950)/60 px-4">
-      <div className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-(--card) p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--overlay) px-4">
+      <div className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-white p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-extrabold text-(--ink)">
@@ -101,7 +101,9 @@ export function UploadSuccessModal({
         </div>
 
         {infoMessage ? (
-          <p className="mt-3 text-xs font-semibold text-(--muted)">{infoMessage}</p>
+          <p className="mt-3 text-xs font-semibold text-(--muted)">
+            {infoMessage}
+          </p>
         ) : null}
       </div>
     </div>

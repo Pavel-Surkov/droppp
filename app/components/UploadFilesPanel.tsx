@@ -50,7 +50,7 @@ export function UploadFilesPanel({
       <p className="mt-2 text-sm text-(--muted)">
         {messages.dropHintPrefix}{' '}
         <button
-          className="cursor-pointer font-bold text-(--accent) underline"
+          className="cursor-pointer font-bold text-(--accent)"
           onClick={onOpenFilePicker}
           type="button"
         >

@@ -24,9 +24,9 @@ export function UploadPinModal({
   const isPinComplete = /^\d{4}$/.test(pinValue);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--color-shadow-grey-950)/60 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--overlay) px-4">
       <form
-        className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-(--card) p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]"
+        className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-white p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]"
         onSubmit={async (event) => {
           event.preventDefault();
           if (!isPinComplete) return;
@@ -35,7 +35,9 @@ export function UploadPinModal({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-extrabold text-(--ink)">{messages.title}</h2>
+            <h2 className="text-xl font-extrabold text-(--ink)">
+              {messages.title}
+            </h2>
             <p className="mt-2 text-sm leading-relaxed text-(--muted)">
               {messages.description}
             </p>
@@ -63,7 +65,7 @@ export function UploadPinModal({
         </div>
 
         <PinInput onChange={onPinChange} value={pinValue} />
-        <p className="mt-3 text-center text-xs text-(--muted)">
+        <p className="mt-3 text-center text-xs text-(--muted) px-8">
           {messages.reminder}
         </p>
         <button

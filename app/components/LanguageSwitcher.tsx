@@ -6,9 +6,9 @@ type LanguageSwitcherProps = {
 
 export function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-2xl border-2 border-(--line) bg-white p-1.5 text-sm font-bold text-(--muted)">
+    <div className="inline-flex items-center gap-1 rounded-3xl bg-white p-1 text-sm font-bold text-(--muted)">
       <a
-        className={`rounded-lg px-2 py-1 transition ${
+        className={`rounded-2xl px-3 py-1.5 transition ${
           locale === 'ru'
             ? 'bg-(--accent) text-white'
             : 'hover:bg-(--highlight) text-(--ink)'
@@ -18,7 +18,7 @@ export function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
         RU
       </a>
       <a
-        className={`rounded-lg px-2 py-1 transition ${
+        className={`rounded-2xl px-3 py-1.5 transition ${
           locale === 'en'
             ? 'bg-(--accent) text-white'
             : 'hover:bg-(--highlight) text-(--ink)'

@@ -235,7 +235,7 @@ export function ShareAccessPanel({
 
       {!token ? (
         <form
-          className="mt-5 rounded-xl border border-(--line) bg-(--card) p-4"
+          className="mt-5 rounded-xl border border-(--line) bg-white p-4"
           onSubmit={(event) => {
             event.preventDefault();
             void onVerifyPin();
@@ -261,14 +261,14 @@ export function ShareAccessPanel({
         </form>
       ) : (
         <div className="mt-5 space-y-4">
-          <div className="rounded-xl border border-(--line) bg-(--card) p-4">
+          <div className="rounded-xl border border-(--line) bg-white p-4">
             <p className="font-bold text-(--ink)">{messages.readyTitle}</p>
             <p className="mt-1 text-sm text-(--muted)">
               {messages.readyDescription}
             </p>
           </div>
 
-          <div className="rounded-xl border border-(--line) bg-(--card) p-4">
+          <div className="rounded-xl border border-(--line) bg-white p-4">
             <p className="font-bold text-(--ink)">{messages.filesTitle}</p>
             <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
               {files.map((file) => (
@@ -283,7 +283,7 @@ export function ShareAccessPanel({
                       onChange={() => toggleSelected(file.index)}
                       type="checkbox"
                     />
-                    <span className="min-w-0 flex space-between items-center">
+                    <span className="min-w-0 flex w-full justify-between items-center">
                       <span className="block truncate font-bold text-(--ink)">
                         {file.name}
                       </span>

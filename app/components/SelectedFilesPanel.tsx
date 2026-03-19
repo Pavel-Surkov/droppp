@@ -15,7 +15,7 @@ export function SelectedFilesPanel({
   onUploadFiles,
 }: SelectedFilesPanelProps) {
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-[1.6rem] border-2 border-(--line) bg-white p-5 text-sm text-(--muted)">
+    <div className="flex h-full min-h-0 flex-col rounded-[1.6rem] bg-white p-5 text-sm text-(--muted)">
       <p className="font-bold text-(--ink)">{messages.title}</p>
       {!files.length ? (
         <p className="mt-2 mb-auto">{messages.empty}</p>
@@ -26,7 +26,7 @@ export function SelectedFilesPanel({
 
             return (
               <li
-                className="flex items-center justify-between rounded-xl border border-(--line) bg-(--drag-overlay) px-3 py-2"
+                className="flex items-center justify-between rounded-xl border border-(--line) px-3 py-2"
                 key={id}
               >
                 <div className="flex min-w-0 items-center gap-2">

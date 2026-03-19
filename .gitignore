@@ -9,3 +9,4 @@ dist
 pnpm-debug.log*
 .pnpm-store
 storage
+*.tsbuildinfo

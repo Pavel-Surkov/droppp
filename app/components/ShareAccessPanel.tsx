@@ -39,7 +39,11 @@ function formatDate(value: string, locale: Locale): string {
   }).format(date);
 }
 
-export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelProps) {
+export function ShareAccessPanel({
+  code,
+  locale,
+  messages,
+}: ShareAccessPanelProps) {
   const [status, setStatus] = useState<ShareStatus>('loading');
   const [share, setShare] = useState<SharePayload | null>(null);
   const [files, setFiles] = useState<SharedFile[]>([]);
@@ -57,8 +61,12 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
       setErrorMessage('');
 
       try {
-        const response = await fetch(`/api/shares/${code}`, { cache: 'no-store' });
-        const payload = (await response.json()) as SharePayload | { message?: string };
+        const response = await fetch(`/api/shares/${code}`, {
+          cache: 'no-store',
+        });
+        const payload = (await response.json()) as
+          | SharePayload
+          | { message?: string };
 
         if (!response.ok) {
           if (response.status === 404) {
@@ -172,11 +180,18 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
     );
   }
 
-  if (status === 'not_found' || status === 'expired' || status === 'error' || !share) {
+  if (
+    status === 'not_found' ||
+    status === 'expired' ||
+    status === 'error' ||
+    !share
+  ) {
     const title =
       status === 'expired' ? messages.expiredTitle : messages.notFoundTitle;
     const description =
-      status === 'expired' ? messages.expiredDescription : messages.notFoundDescription;
+      status === 'expired'
+        ? messages.expiredDescription
+        : messages.notFoundDescription;
 
     return (
       <section className="rounded-[1.6rem] border-2 border-(--line) bg-white p-6 text-(--ink)">
@@ -205,11 +220,15 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
           {share.code}
         </p>
         <p>
-          <span className="font-bold text-(--ink)">{messages.expiresLabel}:</span>{' '}
+          <span className="font-bold text-(--ink)">
+            {messages.expiresLabel}:
+          </span>{' '}
           {formatDate(share.expiresAt, locale)}
         </p>
         <p>
-          <span className="font-bold text-(--ink)">{messages.filesCountLabel}:</span>{' '}
+          <span className="font-bold text-(--ink)">
+            {messages.filesCountLabel}:
+          </span>{' '}
           {share.filesCount}
         </p>
       </div>
@@ -223,7 +242,9 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
           }}
         >
           <p className="font-bold text-(--ink)">{messages.pinTitle}</p>
-          <p className="mt-1 text-sm text-(--muted)">{messages.pinDescription}</p>
+          <p className="mt-1 text-sm text-(--muted)">
+            {messages.pinDescription}
+          </p>
           <PinInput onChange={setPinValue} value={pinValue} />
 
           {errorMessage ? (
@@ -242,7 +263,9 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
         <div className="mt-5 space-y-4">
           <div className="rounded-xl border border-(--line) bg-(--card) p-4">
             <p className="font-bold text-(--ink)">{messages.readyTitle}</p>
-            <p className="mt-1 text-sm text-(--muted)">{messages.readyDescription}</p>
+            <p className="mt-1 text-sm text-(--muted)">
+              {messages.readyDescription}
+            </p>
           </div>
 
           <div className="rounded-xl border border-(--line) bg-(--card) p-4">
@@ -253,14 +276,14 @@ export function ShareAccessPanel({ code, locale, messages }: ShareAccessPanelPro
                   className="flex items-center justify-between rounded-lg border border-(--line) bg-white px-3 py-2"
                   key={file.index}
                 >
-                  <label className="flex min-w-0 cursor-pointer items-center gap-3">
+                  <label className="flex min-w-0 cursor-pointer items-center gap-3 w-full">
                     <input
                       checked={selectedIndexes.includes(file.index)}
                       className="h-4 w-4 cursor-pointer accent-(--accent)"
                       onChange={() => toggleSelected(file.index)}
                       type="checkbox"
                     />
-                    <span className="min-w-0">
+                    <span className="min-w-0 flex space-between items-center">
                       <span className="block truncate font-bold text-(--ink)">
                         {file.name}
                       </span>

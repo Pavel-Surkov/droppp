@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: '/icon.png',
-        width: 256,
-        height: 256,
-        alt: 'Droppp logo',
+        url: '/og.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Droppp',
       },
     ],
   },

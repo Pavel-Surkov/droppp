@@ -4,9 +4,9 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-const title = 'Droppp — обмен файлами по короткой ссылке и PIN';
+const title = 'Droppp — обмен файлами по ссылке';
 const description =
-  'Передавайте файлы между устройствами без регистрации: короткая ссылка, PIN-доступ, скачивание отдельных файлов или ZIP и автоматическое удаление по времени.';
+  'Передавайте файлы между устройствами без регистрации: все, что нужно — короткая ссылка и PIN';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ru_RU',
     url: '/',
-    siteName: 'Droppp',
+    siteName: '',
     title,
     description,
     images: [

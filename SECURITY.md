@@ -20,4 +20,5 @@ If you cannot share privately, open a minimal issue without exploit details and 
 ## Scope Notes
 
 - This project stores files temporarily and deletes expired shares.
+- `POST /api/cleanup` is protected by `x-cleanup-secret` (`CLEANUP_SECRET` in env).
 - Do not use this service for highly sensitive data without additional hardening and dedicated infrastructure.

@@ -92,7 +92,7 @@ export function ShareAccessPanel({
       }
     };
 
-    void loadShare();
+    loadShare();
     return () => {
       cancelled = true;
     };
@@ -147,32 +147,71 @@ export function ShareAccessPanel({
     }
   };
 
-  const downloadSelected = () => {
+  const triggerBlobDownload = (blob: Blob, fileName: string) => {
+    const objectUrl = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = fileName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(objectUrl);
+  };
+
+  const downloadSelected = async () => {
     if (!share || !token || selectedFiles.length === 0) return;
 
-    for (const file of selectedFiles) {
-      const link = document.createElement('a');
-      link.href = `/api/shares/${share.code}/files/${file.index}?token=${encodeURIComponent(token)}`;
-      link.download = file.name;
-      document.body.append(link);
-      link.click();
-      link.remove();
+    try {
+      for (const file of selectedFiles) {
+        const response = await fetch(
+          `/api/shares/${share.code}/files/${file.index}`,
+          {
+            cache: 'no-store',
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('File download failed.');
+        }
+
+        const content = await response.blob();
+        triggerBlobDownload(content, file.name);
+      }
+    } catch {
+      setErrorMessage(messages.downloadFailed);
     }
   };
 
-  const downloadZip = () => {
+  const downloadZip = async () => {
     if (!share || !token || selectedFiles.length === 0) {
       setErrorMessage(messages.selectAtLeastOne);
       return;
     }
 
-    const indexes = selectedFiles.map((file) => file.index).join(',');
-    const link = document.createElement('a');
-    link.href = `/api/shares/${share.code}/archive?token=${encodeURIComponent(token)}&files=${encodeURIComponent(indexes)}`;
-    link.download = `dropp-${share.code}.zip`;
-    document.body.append(link);
-    link.click();
-    link.remove();
+    try {
+      const indexes = selectedFiles.map((file) => file.index).join(',');
+      const response = await fetch(
+        `/api/shares/${share.code}/archive?files=${encodeURIComponent(indexes)}`,
+        {
+          cache: 'no-store',
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Archive download failed.');
+      }
+
+      const content = await response.blob();
+      triggerBlobDownload(content, `dropp-${share.code}.zip`);
+    } catch {
+      setErrorMessage(messages.archiveFailed);
+    }
   };
 
   if (status === 'loading') {
@@ -241,7 +280,7 @@ export function ShareAccessPanel({
           className="mt-5 rounded-xl border border-(--line) bg-white p-4"
           onSubmit={(event) => {
             event.preventDefault();
-            void onVerifyPin();
+            onVerifyPin();
           }}
         >
           <p className="font-bold text-(--ink)">{messages.pinTitle}</p>

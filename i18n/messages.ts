@@ -2,7 +2,6 @@ export type Locale = 'ru' | 'en';
 
 export type AppMessages = {
   hero: {
-    badge: string;
     title: string;
     description: string;
     legalLink: string;
@@ -76,6 +75,8 @@ export type AppMessages = {
     readyDescription: string;
     downloadSelected: string;
     downloadZip: string;
+    downloadFailed: string;
+    archiveFailed: string;
     backHome: string;
   };
   legal: {
@@ -91,10 +92,9 @@ export type AppMessages = {
 const dictionaries: Record<Locale, AppMessages> = {
   ru: {
     hero: {
-      badge: 'Без USB',
       title: 'Droppp',
       description:
-        'Сервис помогает быстро передавать файлы между устройствами по короткой ссылке и PIN-коду без регистрации.\nУдобно, когда нужно открыть документы на чужом компьютере.\nФайлы хранятся ограниченное время и автоматически удаляются после истечения срока.',
+        'Сервис помогает быстро передавать файлы между устройствами по короткой ссылке и PIN-коду без регистрации.\nУдобно, когда нужно открыть документы на чужом компьютере.\nФайлы хранятся ограниченное время и автоматически удаляются после истечения заданного срока.',
       legalLink: 'Правила и условия',
     },
     uploadPanel: {
@@ -173,6 +173,8 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Выберите нужные файлы и скачайте их по отдельности или ZIP-архивом.',
       downloadSelected: 'Скачать выбранные',
       downloadZip: 'Скачать ZIP',
+      downloadFailed: 'Ошибка скачивания файла.',
+      archiveFailed: 'Ошибка скачивания архива.',
       backHome: 'На главную',
     },
     legal: {
@@ -190,7 +192,6 @@ const dictionaries: Record<Locale, AppMessages> = {
   },
   en: {
     hero: {
-      badge: 'No USB needed',
       title: 'Droppp',
       description:
         'This service lets you quickly transfer files between devices using a short link and PIN, without sign-up.\nIt is useful when you need to open documents on another computer.\nFiles are stored for a limited time and then deleted automatically.',
@@ -272,6 +273,8 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Choose files and download them individually or as ZIP archive.',
       downloadSelected: 'Download selected',
       downloadZip: 'Download ZIP',
+      downloadFailed: 'File download failed.',
+      archiveFailed: 'Archive download failed.',
       backHome: 'Back to home',
     },
     legal: {

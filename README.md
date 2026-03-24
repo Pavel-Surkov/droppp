@@ -37,6 +37,19 @@ cp .env.example .env.local
 Required variable:
 
 - `SHARE_ACCESS_TOKEN_SECRET` — random string, minimum 32 characters
+- `CLEANUP_SECRET` — random string for protected `/api/cleanup` endpoint
+
+### Cleanup Endpoint
+
+`/api/cleanup` accepts `POST` only and requires header `x-cleanup-secret`.
+
+Example:
+
+```bash
+curl -X POST \
+  -H "x-cleanup-secret: $CLEANUP_SECRET" \
+  http://localhost:3000/api/cleanup
+```
 
 ## Scripts
 
@@ -55,3 +68,9 @@ On Vercel serverless, fallback storage path is `/tmp/dropp-storage` (ephemeral p
 
 - See [SECURITY.md](./SECURITY.md)
 - Terms and usage disclaimer are available in the app at `/legal`
+
+## API Docs
+
+- API index: [docs/README.md](./docs/README.md)
+- Human-readable API reference: [docs/api.md](./docs/api.md)
+- OpenAPI 3.1 spec: [docs/openapi.yaml](./docs/openapi.yaml)

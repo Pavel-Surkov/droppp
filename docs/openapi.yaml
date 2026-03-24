@@ -1,0 +1,368 @@
+openapi: 3.1.0
+info:
+  title: Droppp API
+  version: 1.0.0
+  description: |
+    HTTP API for temporary file sharing with short links and PIN protection.
+servers:
+  - url: https://droppp.ru
+    description: Production
+  - url: https://{host}
+    description: Parameterized host (staging/self-hosted)
+    variables:
+      host:
+        default: your-domain.com
+  - url: http://localhost:3000
+    description: Local development
+tags:
+  - name: upload
+  - name: shares
+  - name: maintenance
+paths:
+  /api/upload:
+    post:
+      tags: [upload]
+      summary: Upload files and create a share
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [pin, files]
+              properties:
+                pin:
+                  type: string
+                  pattern: '^\d{4}$'
+                  description: 4-digit PIN
+                ttlHours:
+                  type: string
+                  enum: ['1', '6', '12', '24']
+                  description: Optional storage TTL in hours
+                files:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: Share created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '500':
+          $ref: '#/components/responses/Error500'
+  /api/shares/{code}:
+    parameters:
+      - $ref: '#/components/parameters/CodePath'
+    get:
+      tags: [shares]
+      summary: Get public share metadata
+      responses:
+        '200':
+          description: Share metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareMetadataResponse'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '410':
+          $ref: '#/components/responses/Error410'
+        '429':
+          $ref: '#/components/responses/Error429'
+    post:
+      tags: [shares]
+      summary: Verify PIN and get access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyPinRequest'
+      responses:
+        '200':
+          description: Access token and files list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyPinResponse'
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '410':
+          $ref: '#/components/responses/Error410'
+        '429':
+          $ref: '#/components/responses/Error429'
+  /api/shares/{code}/files/{fileIndex}:
+    parameters:
+      - $ref: '#/components/parameters/CodePath'
+      - $ref: '#/components/parameters/FileIndexPath'
+    get:
+      tags: [shares]
+      summary: Download one shared file
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Binary file content
+          headers:
+            content-type:
+              schema:
+                type: string
+            content-length:
+              schema:
+                type: string
+            content-disposition:
+              schema:
+                type: string
+            cache-control:
+              schema:
+                type: string
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '410':
+          $ref: '#/components/responses/Error410'
+        '429':
+          $ref: '#/components/responses/Error429'
+  /api/shares/{code}/archive:
+    parameters:
+      - $ref: '#/components/parameters/CodePath'
+      - $ref: '#/components/parameters/FilesQuery'
+    get:
+      tags: [shares]
+      summary: Download selected files as ZIP
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: ZIP archive
+          headers:
+            content-type:
+              schema:
+                type: string
+            content-disposition:
+              schema:
+                type: string
+            cache-control:
+              schema:
+                type: string
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '410':
+          $ref: '#/components/responses/Error410'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '500':
+          $ref: '#/components/responses/Error500'
+  /api/cleanup:
+    post:
+      tags: [maintenance]
+      summary: Trigger cleanup of expired shares/files
+      security:
+        - cleanupSecret: []
+      responses:
+        '200':
+          description: Cleanup completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CleanupResponse'
+        '401':
+          $ref: '#/components/responses/Error401'
+    get:
+      tags: [maintenance]
+      summary: Not allowed
+      responses:
+        '405':
+          description: Method not allowed
+          headers:
+            allow:
+              schema:
+                type: string
+              example: POST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+    cleanupSecret:
+      type: apiKey
+      in: header
+      name: x-cleanup-secret
+  parameters:
+    CodePath:
+      name: code
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-z0-9]{5}$'
+    FileIndexPath:
+      name: fileIndex
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+    FilesQuery:
+      name: files
+      in: query
+      required: true
+      description: Comma-separated file indexes, e.g. `0,1,2`
+      schema:
+        type: string
+        pattern: '^\d+(,\d+)*$'
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+    UploadResponse:
+      type: object
+      required: [code, shortLink, expiresAt]
+      properties:
+        code:
+          type: string
+        shortLink:
+          type: string
+          example: /s/abc12
+        expiresAt:
+          type: string
+          format: date-time
+    ShareMetadataResponse:
+      type: object
+      required: [code, createdAt, expiresAt, filesCount]
+      properties:
+        code:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        filesCount:
+          type: integer
+          minimum: 0
+    VerifyPinRequest:
+      type: object
+      required: [pin]
+      properties:
+        pin:
+          type: string
+          pattern: '^\d{4}$'
+    SharedFile:
+      type: object
+      required: [index, name, mimeType, size]
+      properties:
+        index:
+          type: integer
+          minimum: 0
+        name:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+          minimum: 0
+    VerifyPinResponse:
+      type: object
+      required: [token, files]
+      properties:
+        token:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/SharedFile'
+    CleanupResponse:
+      type: object
+      required: [message, removed, failed]
+      properties:
+        message:
+          type: string
+          example: Cleanup completed.
+        removed:
+          type: integer
+          minimum: 0
+        failed:
+          type: integer
+          minimum: 0
+  responses:
+    Error400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Error401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Error404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Error410:
+      description: Gone (expired)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Error429:
+      description: Too many requests
+      headers:
+        retry-after:
+          schema:
+            type: string
+          description: Retry delay in seconds
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Error500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

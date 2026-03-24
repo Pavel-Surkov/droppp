@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title,
   description,
+  verification: {
+    google: 'iawCI7hyNDmyuS8Q4EMbieY-Pw2wn3tOu9Qn2lBLSmo',
+  },
   alternates: {
     canonical: '/',
   },

@@ -4,6 +4,9 @@ import { cleanupExpiredShares } from '@/lib/storage';
 
 export const runtime = 'nodejs';
 
+// Maintenance endpoint for manual/scheduled cleanup runs (for example, cron).
+// User upload flow also calls cleanup directly, but this route allows triggering
+// cleanup even when there are no new uploads.
 function getCleanupSecret(): string | null {
   const secret = process.env.CLEANUP_SECRET?.trim();
   if (!secret) return null;
@@ -32,6 +35,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Unauthorized.' }, { status: 401 });
   }
 
+  // Runs expiration cleanup for stored shares and upload directories.
   const result = await cleanupExpiredShares();
   return NextResponse.json({
     message: 'Cleanup completed.',

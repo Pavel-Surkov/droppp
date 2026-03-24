@@ -68,3 +68,9 @@ On Vercel serverless, fallback storage path is `/tmp/dropp-storage` (ephemeral p
 
 - See [SECURITY.md](./SECURITY.md)
 - Terms and usage disclaimer are available in the app at `/legal`
+
+## API Docs
+
+- API index: [docs/README.md](./docs/README.md)
+- Human-readable API reference: [docs/api.md](./docs/api.md)
+- OpenAPI 3.1 spec: [docs/openapi.yaml](./docs/openapi.yaml)

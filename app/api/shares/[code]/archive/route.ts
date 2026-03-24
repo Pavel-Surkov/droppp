@@ -1,9 +1,6 @@
-import { execFile } from 'child_process';
 import { promises as fs } from 'fs';
-import os from 'os';
-import path from 'path';
-import { promisify } from 'util';
 import { NextResponse } from 'next/server';
+import JSZip from 'jszip';
 import { archiveLimiter, consumeLimiter, getClientIp } from '@/lib/rate-limit';
 import { findShareByCode, getShareFilePath } from '@/lib/storage';
 import { getBearerTokenFromRequest } from '@/utils/request-auth';
@@ -14,8 +11,6 @@ export const runtime = 'nodejs';
 type RouteContext = {
   params: Promise<{ code: string }>;
 };
-
-const execFileAsync = promisify(execFile);
 
 function parseIndexes(raw: string | null): number[] {
   if (!raw) return [];
@@ -33,6 +28,27 @@ function encodeFileName(name: string): string {
   return encodeURIComponent(name).replace(/['()*]/g, (char) =>
     `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
   );
+}
+
+function toUniqueArchiveEntryName(
+  originalName: string,
+  usageByName: Map<string, number>,
+): string {
+  const currentUsage = usageByName.get(originalName) ?? 0;
+  usageByName.set(originalName, currentUsage + 1);
+  if (currentUsage === 0) {
+    return originalName;
+  }
+
+  const lastDot = originalName.lastIndexOf('.');
+  const hasExt = lastDot > 0 && lastDot < originalName.length - 1;
+  if (!hasExt) {
+    return `${originalName} (${currentUsage})`;
+  }
+
+  const base = originalName.slice(0, lastDot);
+  const ext = originalName.slice(lastDot);
+  return `${base} (${currentUsage})${ext}`;
 }
 
 export async function GET(request: Request, context: RouteContext) {
@@ -83,18 +99,27 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ message: 'No valid files selected.' }, { status: 400 });
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dropp-zip-'));
-  const archivePath = path.join(tempDir, `dropp-${code}.zip`);
-
   try {
-    const args = ['-j', '-q', archivePath, ...selected.map((entry) => entry.filePath)];
-    await execFileAsync('/usr/bin/zip', args);
-    const content = await fs.readFile(archivePath);
+    const zip = new JSZip();
+    const usageByName = new Map<string, number>();
 
-    return new NextResponse(new Uint8Array(content), {
+    for (const entry of selected) {
+      const entryName = toUniqueArchiveEntryName(entry.fileMeta.originalName, usageByName);
+      const fileContent = await fs.readFile(entry.filePath);
+      zip.file(entryName, fileContent);
+    }
+
+    const content = await zip.generateAsync({
+      type: 'uint8array',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 },
+    });
+
+    return new NextResponse(Buffer.from(content), {
       status: 200,
       headers: {
         'content-type': 'application/zip',
+        'content-length': String(content.byteLength),
         'content-disposition': `attachment; filename*=UTF-8''${encodeFileName(
           `dropp-${code}.zip`,
         )}`,
@@ -103,7 +128,5 @@ export async function GET(request: Request, context: RouteContext) {
     });
   } catch {
     return NextResponse.json({ message: 'Archive creation failed.' }, { status: 500 });
-  } finally {
-    await fs.rm(tempDir, { recursive: true, force: true });
   }
 }

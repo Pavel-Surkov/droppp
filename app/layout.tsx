@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description,
   verification: {
     google: 'iawCI7hyNDmyuS8Q4EMbieY-Pw2wn3tOu9Qn2lBLSmo',
+    yandex: 'eab8d07743367eac',
   },
   alternates: {
     canonical: '/',

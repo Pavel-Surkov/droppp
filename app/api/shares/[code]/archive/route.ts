@@ -6,6 +6,7 @@ import { promisify } from 'util';
 import { NextResponse } from 'next/server';
 import { archiveLimiter, consumeLimiter, getClientIp } from '@/lib/rate-limit';
 import { findShareByCode, getShareFilePath } from '@/lib/storage';
+import { getBearerTokenFromRequest } from '@/utils/request-auth';
 import { verifyShareAccessToken } from '@/utils/share-access-token';
 
 export const runtime = 'nodejs';
@@ -51,7 +52,7 @@ export async function GET(request: Request, context: RouteContext) {
 
   const { code } = await context.params;
   const url = new URL(request.url);
-  const token = url.searchParams.get('token') ?? '';
+  const token = getBearerTokenFromRequest(request);
   const indexes = parseIndexes(url.searchParams.get('files'));
 
   if (!verifyShareAccessToken(token, code)) {

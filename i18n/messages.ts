@@ -75,6 +75,8 @@ export type AppMessages = {
     readyDescription: string;
     downloadSelected: string;
     downloadZip: string;
+    downloadFailed: string;
+    archiveFailed: string;
     backHome: string;
   };
   legal: {
@@ -171,6 +173,8 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Выберите нужные файлы и скачайте их по отдельности или ZIP-архивом.',
       downloadSelected: 'Скачать выбранные',
       downloadZip: 'Скачать ZIP',
+      downloadFailed: 'Ошибка скачивания файла.',
+      archiveFailed: 'Ошибка скачивания архива.',
       backHome: 'На главную',
     },
     legal: {
@@ -269,6 +273,8 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Choose files and download them individually or as ZIP archive.',
       downloadSelected: 'Download selected',
       downloadZip: 'Download ZIP',
+      downloadFailed: 'File download failed.',
+      archiveFailed: 'Archive download failed.',
       backHome: 'Back to home',
     },
     legal: {

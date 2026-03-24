@@ -7,6 +7,7 @@ import {
   downloadLimiter,
   getClientIp,
 } from '@/lib/rate-limit';
+import { getBearerTokenFromRequest } from '@/utils/request-auth';
 import { verifyShareAccessToken } from '@/utils/share-access-token';
 
 export const runtime = 'nodejs';
@@ -37,7 +38,7 @@ export async function GET(request: Request, context: RouteContext) {
   }
 
   const { code, fileIndex } = await context.params;
-  const token = new URL(request.url).searchParams.get('token') ?? '';
+  const token = getBearerTokenFromRequest(request);
 
   if (!verifyShareAccessToken(token, code)) {
     return NextResponse.json({ message: 'Access denied.' }, { status: 401 });

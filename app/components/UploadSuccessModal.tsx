@@ -46,8 +46,16 @@ export function UploadSuccessModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-(--overlay) px-4">
-      <div className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-white p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-(--overlay) px-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl border-2 border-(--line) bg-white p-6 shadow-[0_14px_40px_rgba(0,0,0,0.32)]"
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-extrabold text-(--ink)">

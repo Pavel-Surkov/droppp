@@ -12,6 +12,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title,
   description,
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  manifest: '/manifest.webmanifest',
   verification: {
     google: 'iawCI7hyNDmyuS8Q4EMbieY-Pw2wn3tOu9Qn2lBLSmo',
     yandex: 'eab8d07743367eac',

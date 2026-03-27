@@ -42,10 +42,11 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
     isUploading,
     isSuccessModalOpen,
     shareLink,
+    sharePin,
     storageTtlHours,
-    setPinValue,
     setStorageTtlHours,
     openPinModal,
+    refreshPin,
     closePinModal,
     closeSuccessModal,
     continueUpload,
@@ -90,16 +91,17 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
         isSubmitting={isUploading}
         onContinue={continueUpload}
         onClose={closePinModal}
-        onPinChange={setPinValue}
         pinValue={pinValue}
         selectedTtlHours={storageTtlHours}
         onTtlChange={setStorageTtlHours}
+        onRefreshPin={refreshPin}
       />
       <UploadSuccessModal
         messages={messages.successModal}
         isOpen={isSuccessModalOpen}
         onClose={closeSuccessModal}
         shareLink={shareLink}
+        sharePin={sharePin}
       />
     </>
   );

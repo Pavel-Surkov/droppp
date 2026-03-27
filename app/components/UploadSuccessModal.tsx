@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { AppMessages } from '@/i18n/messages';
+import { formatMessage } from '@/utils/format-message';
 
 type UploadSuccessModalProps = {
   messages: AppMessages['successModal'];
   isOpen: boolean;
   shareLink: string;
+  sharePin: string;
   onClose: () => void;
 };
 
@@ -12,6 +14,7 @@ export function UploadSuccessModal({
   messages,
   isOpen,
   shareLink,
+  sharePin,
   onClose,
 }: UploadSuccessModalProps) {
   const [infoMessage, setInfoMessage] = useState('');
@@ -33,10 +36,15 @@ export function UploadSuccessModal({
       return;
     }
 
+    const shareBody = formatMessage(messages.shareBodyTemplate, {
+      link: shareLink,
+      pin: sharePin,
+    });
+
     try {
       await navigator.share({
         title: messages.shareTitle,
-        text: messages.shareText,
+        text: shareBody,
         url: shareLink,
       });
       setInfoMessage(messages.shareOpened);

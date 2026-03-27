@@ -23,7 +23,9 @@ export type AppMessages = {
   pinModal: {
     title: string;
     description: string;
+    pinLabel: string;
     reminder: string;
+    refreshPinAria: string;
     ttlLabel: string;
     ttlHint: string;
     ttlOneHour: string;
@@ -46,7 +48,7 @@ export type AppMessages = {
     shareOpened: string;
     shareCancelled: string;
     shareTitle: string;
-    shareText: string;
+    shareBodyTemplate: string;
   };
   errors: {
     tooLarge: string;
@@ -115,8 +117,10 @@ const dictionaries: Record<Locale, AppMessages> = {
       title: 'Введите PIN',
       description:
         'Получателю нужно будет ввести этот PIN для доступа к файлам.',
+      pinLabel: 'Пин-код',
       reminder:
         'Сохраните PIN в надежном месте, чтобы не потерять доступ к файлам.',
+      refreshPinAria: 'Сгенерировать новый PIN',
       ttlLabel: 'Время хранения',
       ttlHint: 'Файлы удалятся автоматически после выбранного срока.',
       ttlOneHour: '1 ч',
@@ -140,7 +144,8 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareOpened: 'Окно Share открыто.',
       shareCancelled: 'Поделиться не удалось или действие отменено.',
       shareTitle: 'Ссылка на файлы',
-      shareText: 'Откройте эту ссылку, чтобы получить доступ к файлам.',
+      shareBodyTemplate:
+        'DROPPP — сервис для шеринга файлов.\nФайлы можно получить по ссылке: {link}\nПин-код: {pin}',
     },
     errors: {
       tooLarge: '{count} файл(ов) пропущено: максимум {size} на файл.',
@@ -215,8 +220,10 @@ const dictionaries: Record<Locale, AppMessages> = {
       title: 'Enter a PIN',
       description:
         'The recipient will need to enter this PIN to access the files.',
+      pinLabel: 'PIN code',
       reminder:
         'Save this PIN somewhere safe. You will need it to share file access.',
+      refreshPinAria: 'Generate a new PIN',
       ttlLabel: 'Storage time',
       ttlHint: 'Files are deleted automatically after the selected time.',
       ttlOneHour: '1h',
@@ -240,7 +247,8 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareOpened: 'Share dialog opened.',
       shareCancelled: 'Share action was cancelled.',
       shareTitle: 'File access link',
-      shareText: 'Use this link to access the uploaded files.',
+      shareBodyTemplate:
+        'DROPPP — file sharing service.\nFiles can be accessed via this link: {link}\nPIN code: {pin}',
     },
     errors: {
       tooLarge: '{count} file(s) skipped: max size is {size} per file.',

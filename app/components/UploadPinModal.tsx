@@ -88,7 +88,7 @@ export function UploadPinModal({
 
         <div className="mt-4">
           <p className="text-sm font-bold text-(--ink)">{messages.pinLabel}</p>
-          <div className="mt-2 flex items-center justify-center gap-2">
+          <div className="relative mt-2">
             <div className="flex items-center justify-center gap-2">
               {pinDigits.map((digit, index) => (
                 <div
@@ -101,7 +101,7 @@ export function UploadPinModal({
             </div>
             <button
               aria-label={messages.refreshPinAria}
-              className="cursor-pointer p-1 text-(--muted) transition hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
+              className="absolute top-1/2 left-1/2 -translate-y-1/2 translate-x-[108px] cursor-pointer p-1 text-(--muted) transition hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isSubmitting}
               onClick={() => {
                 refreshIconRef.current?.animate(
@@ -128,9 +128,9 @@ export function UploadPinModal({
                 <path
                   d="M4.06189 13C4.02104 12.6724 4 12.3387 4 12C4 7.58172 7.58172 4 12 4C14.5006 4 16.7332 5.14727 18.2002 6.94416M19.9381 11C19.979 11.3276 20 11.6613 20 12C20 16.4183 16.4183 20 12 20C9.61061 20 7.46589 18.9525 6 17.2916M9 17H6V17.2916M18.2002 4V6.94416M18.2002 6.94416V6.99993L15.2002 7M6 20V17.2916"
                   stroke="#000000"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </button>

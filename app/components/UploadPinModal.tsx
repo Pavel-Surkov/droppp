@@ -1,4 +1,6 @@
-import { PinInput } from '@/app/components/PinInput';
+'use client';
+
+import { useRef } from 'react';
 import {
   STORAGE_TTL_HOURS_OPTIONS,
   type StorageTtlHours,
@@ -12,8 +14,8 @@ type UploadPinModalProps = {
   pinValue: string;
   selectedTtlHours: StorageTtlHours;
   onClose: () => void;
-  onPinChange: (value: string) => void;
   onTtlChange: (value: StorageTtlHours) => void;
+  onRefreshPin: () => void;
   onContinue: () => Promise<void>;
 };
 
@@ -24,12 +26,18 @@ export function UploadPinModal({
   pinValue,
   selectedTtlHours,
   onClose,
-  onPinChange,
   onTtlChange,
+  onRefreshPin,
   onContinue,
 }: UploadPinModalProps) {
+  const refreshIconRef = useRef<SVGSVGElement | null>(null);
+
   if (!isOpen) return null;
   const isPinComplete = /^\d{4}$/.test(pinValue);
+  const pinDigits = Array.from(
+    { length: 4 },
+    (_, index) => pinValue[index] ?? ''
+  );
   const ttlLabels: Record<StorageTtlHours, string> = {
     1: messages.ttlOneHour,
     6: messages.ttlSixHours,
@@ -78,7 +86,56 @@ export function UploadPinModal({
           </button>
         </div>
 
-        <PinInput onChange={onPinChange} value={pinValue} />
+        <div className="mt-4">
+          <p className="text-sm font-bold text-(--ink)">{messages.pinLabel}</p>
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2">
+              {pinDigits.map((digit, index) => (
+                <div
+                  className="flex h-11 w-11 items-center justify-center rounded-lg border border-(--line) bg-white text-center text-lg font-extrabold text-(--ink)"
+                  key={index}
+                >
+                  {digit}
+                </div>
+              ))}
+            </div>
+            <button
+              aria-label={messages.refreshPinAria}
+              className="cursor-pointer p-1 text-(--muted) transition hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isSubmitting}
+              onClick={() => {
+                refreshIconRef.current?.animate(
+                  [
+                    { transform: 'rotate(0deg)' },
+                    { transform: 'rotate(360deg)' },
+                  ],
+                  {
+                    duration: 560,
+                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                  }
+                );
+                onRefreshPin();
+              }}
+              type="button"
+            >
+              <svg
+                className="w-5 h-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                ref={refreshIconRef}
+              >
+                <path
+                  d="M4.06189 13C4.02104 12.6724 4 12.3387 4 12C4 7.58172 7.58172 4 12 4C14.5006 4 16.7332 5.14727 18.2002 6.94416M19.9381 11C19.979 11.3276 20 11.6613 20 12C20 16.4183 16.4183 20 12 20C9.61061 20 7.46589 18.9525 6 17.2916M9 17H6V17.2916M18.2002 4V6.94416M18.2002 6.94416V6.99993L15.2002 7M6 20V17.2916"
+                  stroke="#000000"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
         <p className="mt-3 text-center text-xs text-(--muted) px-8">
           {messages.reminder}
         </p>

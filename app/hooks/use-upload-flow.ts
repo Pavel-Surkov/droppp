@@ -5,6 +5,7 @@ import {
   DEFAULT_STORAGE_TTL_HOURS,
   type StorageTtlHours,
 } from '@/constants/upload';
+import { generatePin } from '@/utils/pin';
 
 type UseUploadFlowParams = {
   files: File[];
@@ -26,11 +27,13 @@ export function useUploadFlow({
   const [isUploading, setIsUploading] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [shareLink, setShareLink] = useState('');
+  const [sharePin, setSharePin] = useState('');
   const [storageTtlHours, setStorageTtlHours] = useState<StorageTtlHours>(
     DEFAULT_STORAGE_TTL_HOURS,
   );
 
   const openPinModal = () => {
+    setPinValue(generatePin());
     setIsPinModalOpen(true);
   };
 
@@ -44,6 +47,12 @@ export function useUploadFlow({
   const closeSuccessModal = () => {
     setIsSuccessModalOpen(false);
     setShareLink('');
+    setSharePin('');
+  };
+
+  const refreshPin = () => {
+    if (isUploading) return;
+    setPinValue(generatePin());
   };
 
   const continueUpload = async () => {
@@ -81,6 +90,7 @@ export function useUploadFlow({
 
       clearSelectedFiles();
       setIsPinModalOpen(false);
+      setSharePin(pinValue);
       setPinValue('');
       setStorageTtlHours(DEFAULT_STORAGE_TTL_HOURS);
       setShareLink(fullShareLink);
@@ -100,10 +110,11 @@ export function useUploadFlow({
     isUploading,
     isSuccessModalOpen,
     shareLink,
+    sharePin,
     storageTtlHours,
-    setPinValue,
     setStorageTtlHours,
     openPinModal,
+    refreshPin,
     closePinModal,
     closeSuccessModal,
     continueUpload,

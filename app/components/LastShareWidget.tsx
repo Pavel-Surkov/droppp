@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { AppMessages, Locale } from '@/i18n/messages';
 import {
   clearLastShareCookie,
+  LAST_SHARE_COOKIE_UPDATED_EVENT,
   readLastShareCookie,
   type LastShareCookieData,
 } from '@/utils/last-share-cookie';
@@ -36,12 +37,21 @@ export function LastShareWidget({ locale, messages }: LastShareWidgetProps) {
     let expiryTimeout: number | undefined;
 
     const hydrate = async () => {
+      if (expiryTimeout) {
+        window.clearTimeout(expiryTimeout);
+        expiryTimeout = undefined;
+      }
+
       const saved = readLastShareCookie();
-      if (!saved) return;
+      if (!saved) {
+        if (!cancelled) setShare(null);
+        return;
+      }
 
       const expiresAtMs = new Date(saved.expiresAt).getTime();
       if (!Number.isFinite(expiresAtMs) || expiresAtMs <= Date.now()) {
         clearLastShareCookie();
+        if (!cancelled) setShare(null);
         return;
       }
 
@@ -79,9 +89,14 @@ export function LastShareWidget({ locale, messages }: LastShareWidgetProps) {
     };
 
     void hydrate();
+    const onCookieUpdated = () => {
+      void hydrate();
+    };
+    window.addEventListener(LAST_SHARE_COOKIE_UPDATED_EVENT, onCookieUpdated);
 
     return () => {
       cancelled = true;
+      window.removeEventListener(LAST_SHARE_COOKIE_UPDATED_EVENT, onCookieUpdated);
       if (expiryTimeout) window.clearTimeout(expiryTimeout);
     };
   }, []);

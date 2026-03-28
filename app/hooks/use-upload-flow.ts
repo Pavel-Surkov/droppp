@@ -5,7 +5,10 @@ import {
   DEFAULT_STORAGE_TTL_HOURS,
   type StorageTtlHours,
 } from '@/constants/upload';
-import { saveLastShareCookie } from '@/utils/last-share-cookie';
+import {
+  notifyLastShareCookieUpdated,
+  saveLastShareCookie,
+} from '@/utils/last-share-cookie';
 import { generatePin } from '@/utils/pin';
 
 type UseUploadFlowParams = {
@@ -52,6 +55,7 @@ export function useUploadFlow({
 
   const closeSuccessModal = () => {
     setIsSuccessModalOpen(false);
+    notifyLastShareCookieUpdated();
     setShareLink('');
     setSharePin('');
   };
@@ -106,13 +110,16 @@ export function useUploadFlow({
       setIsSuccessModalOpen(true);
 
       if (code && expiresAt) {
-        saveLastShareCookie({
-          code,
-          link: fullShareLink,
-          pin: pinValue,
-          expiresAt,
-          createdAt: new Date().toISOString(),
-        });
+        saveLastShareCookie(
+          {
+            code,
+            link: fullShareLink,
+            pin: pinValue,
+            expiresAt,
+            createdAt: new Date().toISOString(),
+          },
+          { emitEvent: false },
+        );
       }
     } catch (error) {
       const message =

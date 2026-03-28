@@ -50,6 +50,16 @@ export type AppMessages = {
     shareTitle: string;
     shareBodyTemplate: string;
   };
+  lastShare: {
+    title: string;
+    copyButton: string;
+    showPin: string;
+    hidePin: string;
+    copied: string;
+    copyFailed: string;
+    expiresLabel: string;
+    openLink: string;
+  };
   errors: {
     tooLarge: string;
     tooMany: string;
@@ -146,6 +156,16 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareTitle: 'Ссылка на файлы',
       shareBodyTemplate:
         'DROPPP — сервис для шеринга файлов.\nФайлы можно получить по ссылке: {link}\nПин-код: {pin}',
+    },
+    lastShare: {
+      title: 'Последняя ссылка',
+      copyButton: 'Скопировать ссылку',
+      showPin: 'Показать PIN',
+      hidePin: 'Скрыть PIN',
+      copied: 'Ссылка скопирована.',
+      copyFailed: 'Не удалось скопировать ссылку.',
+      expiresLabel: 'Действует до',
+      openLink: 'Открыть',
     },
     errors: {
       tooLarge: '{count} файл(ов) пропущено: максимум {size} на файл.',
@@ -249,6 +269,16 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareTitle: 'File access link',
       shareBodyTemplate:
         'DROPPP — file sharing service.\nFiles can be accessed via this link: {link}\nPIN code: {pin}',
+    },
+    lastShare: {
+      title: 'Last shared link',
+      copyButton: 'Copy link',
+      showPin: 'Show PIN',
+      hidePin: 'Hide PIN',
+      copied: 'Link copied.',
+      copyFailed: 'Could not copy the link.',
+      expiresLabel: 'Available until',
+      openLink: 'Open',
     },
     errors: {
       tooLarge: '{count} file(s) skipped: max size is {size} per file.',

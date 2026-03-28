@@ -5,6 +5,7 @@ import {
   DEFAULT_STORAGE_TTL_HOURS,
   type StorageTtlHours,
 } from '@/constants/upload';
+import { saveLastShareCookie } from '@/utils/last-share-cookie';
 import { generatePin } from '@/utils/pin';
 
 type UseUploadFlowParams = {
@@ -31,6 +32,11 @@ export function useUploadFlow({
   const [storageTtlHours, setStorageTtlHours] = useState<StorageTtlHours>(
     DEFAULT_STORAGE_TTL_HOURS,
   );
+
+  const extractCodeFromShortLink = (shortLink: string): string | null => {
+    const matched = shortLink.match(/\/s\/([^/?#]+)/);
+    return matched?.[1] ?? null;
+  };
 
   const openPinModal = () => {
     setPinValue(generatePin());
@@ -78,15 +84,18 @@ export function useUploadFlow({
         message?: string;
         code?: string;
         shortLink?: string;
+        expiresAt?: string;
       };
       if (!response.ok) {
         throw new Error(payload.message ?? uploadFailedMessage);
       }
 
       const shortLink = payload.shortLink ?? (payload.code ? `/s/${payload.code}` : '');
+      const code = payload.code ?? (shortLink ? extractCodeFromShortLink(shortLink) : null);
       const fullShareLink = shortLink
         ? `${window.location.origin}${shortLink}`
         : window.location.href;
+      const expiresAt = payload.expiresAt;
 
       clearSelectedFiles();
       setIsPinModalOpen(false);
@@ -95,6 +104,16 @@ export function useUploadFlow({
       setStorageTtlHours(DEFAULT_STORAGE_TTL_HOURS);
       setShareLink(fullShareLink);
       setIsSuccessModalOpen(true);
+
+      if (code && expiresAt) {
+        saveLastShareCookie({
+          code,
+          link: fullShareLink,
+          pin: pinValue,
+          expiresAt,
+          createdAt: new Date().toISOString(),
+        });
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : uploadFailedMessage;

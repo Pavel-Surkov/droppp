@@ -50,6 +50,16 @@ export type AppMessages = {
     shareTitle: string;
     shareBodyTemplate: string;
   };
+  lastShare: {
+    title: string;
+    copyButton: string;
+    showPin: string;
+    hidePin: string;
+    copied: string;
+    copyFailed: string;
+    expiresLabel: string;
+    openLink: string;
+  };
   errors: {
     tooLarge: string;
     tooMany: string;
@@ -87,6 +97,10 @@ export type AppMessages = {
     userResponsibility: string;
     ownerDisclaimer: string;
     securityNotice: string;
+    cookiesTitle: string;
+    cookiesDescription: string;
+    cookiesStorage: string;
+    cookiesControl: string;
     backHome: string;
   };
 };
@@ -147,6 +161,16 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareBodyTemplate:
         'DROPPP — сервис для шеринга файлов.\nФайлы можно получить по ссылке: {link}\nПин-код: {pin}',
     },
+    lastShare: {
+      title: 'Последняя ссылка',
+      copyButton: 'Скопировать ссылку',
+      showPin: 'Показать PIN',
+      hidePin: 'Скрыть PIN',
+      copied: 'Ссылка скопирована.',
+      copyFailed: 'Не удалось скопировать ссылку.',
+      expiresLabel: 'Действует до',
+      openLink: 'Открыть',
+    },
     errors: {
       tooLarge: '{count} файл(ов) пропущено: максимум {size} на файл.',
       tooMany: '{count} файл(ов) пропущено: максимум {max} файлов.',
@@ -192,6 +216,13 @@ const dictionaries: Record<Locale, AppMessages> = {
         'Владелец сервиса не несет ответственности за последствия использования сервиса, включая возможную утечку или кражу файлов третьими лицами.',
       securityNotice:
         'Не загружайте данные, которые не готовы передавать через публичный интернет.',
+      cookiesTitle: 'Использование cookies',
+      cookiesDescription:
+        'Сервис использует функциональные cookies для сохранения последней созданной ссылки на текущем устройстве пользователя.',
+      cookiesStorage:
+        'В cookie могут храниться короткая ссылка, PIN-код и время истечения доступа. Cookie удаляется автоматически после истечения срока хранения файлов.',
+      cookiesControl:
+        'Пользователь может удалить cookies через настройки браузера. Отключение cookies может ограничить работу части функций сервиса.',
       backHome: 'На главную',
     },
   },
@@ -250,6 +281,16 @@ const dictionaries: Record<Locale, AppMessages> = {
       shareBodyTemplate:
         'DROPPP — file sharing service.\nFiles can be accessed via this link: {link}\nPIN code: {pin}',
     },
+    lastShare: {
+      title: 'Last shared link',
+      copyButton: 'Copy link',
+      showPin: 'Show PIN',
+      hidePin: 'Hide PIN',
+      copied: 'Link copied.',
+      copyFailed: 'Could not copy the link.',
+      expiresLabel: 'Available until',
+      openLink: 'Open',
+    },
     errors: {
       tooLarge: '{count} file(s) skipped: max size is {size} per file.',
       tooMany: '{count} file(s) skipped: max {max} files allowed.',
@@ -295,6 +336,13 @@ const dictionaries: Record<Locale, AppMessages> = {
         'The service owner is not liable for consequences of service usage, including possible data leaks or file theft by third parties.',
       securityNotice:
         'Do not upload data you are not ready to transfer over the public internet.',
+      cookiesTitle: 'Cookies',
+      cookiesDescription:
+        'The service uses functional cookies to keep the most recently created share link on the current device.',
+      cookiesStorage:
+        'The cookie may store a short link, PIN code, and expiration time. It is removed automatically after the share expires.',
+      cookiesControl:
+        'You can remove cookies in your browser settings. Disabling cookies may limit parts of the service functionality.',
       backHome: 'Back to home',
     },
   },

@@ -24,6 +24,12 @@ export default async function LegalPage({ searchParams }: LegalPageProps) {
         <p className="mt-3 text-(--muted)">{messages.legal.userResponsibility}</p>
         <p className="mt-3 text-(--muted)">{messages.legal.ownerDisclaimer}</p>
         <p className="mt-3 text-(--muted)">{messages.legal.securityNotice}</p>
+        <h2 className="mt-6 text-xl font-extrabold text-(--ink)">
+          {messages.legal.cookiesTitle}
+        </h2>
+        <p className="mt-3 text-(--muted)">{messages.legal.cookiesDescription}</p>
+        <p className="mt-3 text-(--muted)">{messages.legal.cookiesStorage}</p>
+        <p className="mt-3 text-(--muted)">{messages.legal.cookiesControl}</p>
 
         <a
           className="mt-6 inline-flex rounded-xl bg-(--accent) px-4 py-2 font-bold text-white"

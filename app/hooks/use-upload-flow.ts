@@ -133,6 +133,7 @@ export function useUploadFlow({
   return {
     isPinModalOpen,
     pinValue,
+    setPinValue,
     isUploading,
     isSuccessModalOpen,
     shareLink,

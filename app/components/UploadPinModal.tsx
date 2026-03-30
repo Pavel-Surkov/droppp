@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import { PinInput } from '@/app/components/PinInput';
 import {
   STORAGE_TTL_HOURS_OPTIONS,
   type StorageTtlHours,
@@ -14,6 +15,7 @@ type UploadPinModalProps = {
   pinValue: string;
   selectedTtlHours: StorageTtlHours;
   onClose: () => void;
+  onPinChange: (value: string) => void;
   onTtlChange: (value: StorageTtlHours) => void;
   onRefreshPin: () => void;
   onContinue: () => Promise<void>;
@@ -26,6 +28,7 @@ export function UploadPinModal({
   pinValue,
   selectedTtlHours,
   onClose,
+  onPinChange,
   onTtlChange,
   onRefreshPin,
   onContinue,
@@ -34,10 +37,6 @@ export function UploadPinModal({
 
   if (!isOpen) return null;
   const isPinComplete = /^\d{4}$/.test(pinValue);
-  const pinDigits = Array.from(
-    { length: 4 },
-    (_, index) => pinValue[index] ?? ''
-  );
   const ttlLabels: Record<StorageTtlHours, string> = {
     1: messages.ttlOneHour,
     6: messages.ttlSixHours,
@@ -88,20 +87,15 @@ export function UploadPinModal({
 
         <div className="mt-4">
           <p className="text-sm font-bold text-(--ink)">{messages.pinLabel}</p>
-          <div className="relative mt-2">
-            <div className="flex items-center justify-center gap-2">
-              {pinDigits.map((digit, index) => (
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-lg border border-(--line) bg-white text-center text-lg font-extrabold text-(--ink)"
-                  key={index}
-                >
-                  {digit}
-                </div>
-              ))}
-            </div>
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <PinInput
+              value={pinValue}
+              onChange={onPinChange}
+              containerClassName="mt-0"
+            />
             <button
               aria-label={messages.refreshPinAria}
-              className="absolute top-1/2 left-1/2 -translate-y-1/2 translate-x-[108px] cursor-pointer p-1 text-(--muted) transition hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer p-1 text-(--muted) transition hover:text-(--accent) disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isSubmitting}
               onClick={() => {
                 refreshIconRef.current?.animate(

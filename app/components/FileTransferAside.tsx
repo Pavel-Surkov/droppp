@@ -39,6 +39,7 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
   const {
     isPinModalOpen,
     pinValue,
+    setPinValue,
     isUploading,
     isSuccessModalOpen,
     shareLink,
@@ -92,6 +93,7 @@ export function FileTransferAside({ messages }: FileTransferAsideProps) {
         onContinue={continueUpload}
         onClose={closePinModal}
         pinValue={pinValue}
+        onPinChange={setPinValue}
         selectedTtlHours={storageTtlHours}
         onTtlChange={setStorageTtlHours}
         onRefreshPin={refreshPin}

@@ -56,7 +56,7 @@ export function PinInput({
 
   return (
     <div
-      className={`mt-4 flex items-center justify-center gap-2 ${containerClassName ?? ''}`}
+      className={`flex items-center justify-center gap-2 ${containerClassName ?? ''}`}
     >
       {digits.map((digit, index) => (
         <input
